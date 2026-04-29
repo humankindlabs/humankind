@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline · humankind</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #00031C;
+      color: #ffffff;
+      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 360px;
+    }
+    .icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.5rem;
+      display: block;
+      opacity: 0.9;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: 0.9375rem;
+      color: #CCCDD2;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    button {
+      background: #0CB001;
+      color: #ffffff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    button:hover {
+      background: #0da001;
+    }
+    .brand {
+      margin-top: 2rem;
+      font-size: 0.6875rem;
+      letter-spacing: 0.2em;
+      color: rgba(255, 255, 255, 0.4);
+      text-transform: lowercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="/icons/icon-192.png" alt="humankind" class="icon" />
+    <h1>You're offline</h1>
+    <p>Check your connection and try again. Your content is waiting.</p>
+    <button onclick="location.reload()">Try again</button>
+    <p class="brand">humankind</p>
+  </div>
+</body>
+</html>

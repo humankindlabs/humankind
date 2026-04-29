@@ -1,0 +1,319 @@
+/* src/app/globals.css
+ *
+ * humankind marketing site styles.
+ * Brand design tokens + animations + utility classes used across
+ * homepage hero variants, section components, and content pages.
+ */
+
+/* ------------------------------------------------------------
+   FONTS — Mont brand font (used in stats, hero, brand mark)
+   ------------------------------------------------------------ */
+@font-face {
+  font-family: 'Mont';
+  src: url('/font/Mont-Heavy.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Mont';
+  src: url('/font/Mont-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------
+   DESIGN TOKENS
+   ------------------------------------------------------------ */
+:root {
+  --hk-bg:           #00031C;
+  --hk-bg-raised:    #020520;
+  --hk-bg-overlay:   #04082e;
+
+  --hk-surface:      rgba(255, 255, 255, 0.04);
+  --hk-surface-md:   rgba(255, 255, 255, 0.07);
+  --hk-surface-high: rgba(255, 255, 255, 0.10);
+
+  --hk-border:       rgba(255, 255, 255, 0.08);
+  --hk-border-md:    rgba(255, 255, 255, 0.12);
+  --hk-border-high:  rgba(255, 255, 255, 0.20);
+
+  --hk-accent:        #0CB001;
+  --hk-accent-hover:  #0da001;
+  --hk-accent-dim:    rgba(12, 176, 1, 0.15);
+  --hk-accent-border: rgba(12, 176, 1, 0.30);
+
+  --hk-text:         #ffffff;
+  --hk-text-sec:     rgba(255, 255, 255, 0.70);
+  --hk-text-muted:   rgba(255, 255, 255, 0.40);
+  --hk-text-faint:   rgba(255, 255, 255, 0.20);
+
+  --hk-success: #0CB001;
+  --hk-warning: #f59e0b;
+  --hk-error:   #ef4444;
+
+  --hk-radius-sm:  0.5rem;
+  --hk-radius-md:  0.75rem;
+  --hk-radius-lg:  1rem;
+  --hk-radius-xl:  1.25rem;
+  --hk-radius-2xl: 1.5rem;
+  --hk-radius-3xl: 2rem;
+
+  --hk-shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.4);
+  --hk-shadow-md:   0 4px 16px rgba(0, 0, 0, 0.5);
+  --hk-shadow-lg:   0 8px 32px rgba(0, 0, 0, 0.6);
+  --hk-shadow-glow: 0 0 24px rgba(12, 176, 1, 0.15);
+
+  --hk-font-brand: 'Mont', var(--font-geist-sans, system-ui), sans-serif;
+}
+
+/* ------------------------------------------------------------
+   BASE
+   ------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+a { color: inherit; }
+
+::selection {
+  background: rgba(12, 176, 1, 0.4);
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------
+   ANIMATIONS
+   ------------------------------------------------------------ */
+
+@keyframes hk-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes hk-spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes hk-pulse-ring {
+  0%   { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+@keyframes hk-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+@keyframes hk-marquee-seamless {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes hk-marquee-seamless-reverse {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes hk-float-in {
+  from { opacity: 0; transform: translateY(32px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes hk-scroll-line {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  51%  { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ------------------------------------------------------------
+   UTILITY CLASSES
+   ------------------------------------------------------------ */
+
+.hk-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hk-meta {
+  font-size: 0.75rem;
+  color: var(--hk-text-muted);
+}
+
+.hk-brand {
+  font-family: var(--hk-font-brand);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.hk-empty-state {
+  padding: 3rem 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: var(--hk-radius-lg);
+  text-align: center;
+  color: var(--hk-text-muted);
+}
+.hk-empty-state p { margin: 0; }
+
+.hk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(12, 176, 1, 0.1);
+  color: #4ade80;
+}
+
+.hk-badge-live {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+}
+.hk-badge-live::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  margin-right: 0.375rem;
+  animation: hk-blink 1.2s infinite;
+}
+
+/* ------------------------------------------------------------
+   BUTTONS
+   ------------------------------------------------------------ */
+.hk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: var(--hk-radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+.hk-btn:active { transform: translateY(1px); }
+
+.hk-btn-primary {
+  background: var(--hk-accent);
+  color: #fff;
+  border-color: var(--hk-accent);
+}
+.hk-btn-primary:hover {
+  background: var(--hk-accent-hover);
+  border-color: var(--hk-accent-hover);
+}
+
+.hk-btn-secondary {
+  background: transparent;
+  color: var(--hk-text);
+  border-color: var(--hk-border-md);
+}
+.hk-btn-secondary:hover {
+  border-color: var(--hk-border-high);
+  background: var(--hk-surface);
+}
+
+.hk-btn-ghost {
+  background: transparent;
+  color: var(--hk-text-sec);
+  border-color: transparent;
+}
+.hk-btn-ghost:hover { color: var(--hk-text); }
+
+.hk-btn-sm  { padding: 0.4375rem 0.875rem; font-size: 0.8125rem; }
+.hk-btn-lg  { padding: 0.875rem 1.75rem; font-size: 1rem; }
+.hk-btn-full { width: 100%; }
+
+/* ------------------------------------------------------------
+   LAYOUT GRIDS — for what-is-humankind, our-vision, sections
+   ------------------------------------------------------------ */
+
+/* Pillar split row — 40/60 image/content on desktop */
+.hk-pillar-row {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.hk-pillar-image {
+  position: relative;
+}
+
+.hk-pillar-img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+}
+
+/* Two-column content grid used in Humankind 3.0 section */
+.hk-30-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+/* Generic split row used by our-vision feature splits */
+.hk-split-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+/* Homepage split (used by SectionLiveCTA and other 50/50 layouts) */
+.hk-home-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+/* ------------------------------------------------------------
+   RESPONSIVE — collapse to single column on tablet/mobile
+   ------------------------------------------------------------ */
+@media (max-width: 768px) {
+  .hk-pillar-row {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+  .hk-pillar-row > * {
+    order: unset !important;
+  }
+  .hk-pillar-img {
+    aspect-ratio: 1 / 1 !important;
+  }
+  .hk-30-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem !important;
+  }
+  .hk-split-section {
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem !important;
+  }
+  .hk-split-section > * {
+    order: unset !important;
+  }
+  .hk-home-split {
+    grid-template-columns: 1fr !important;
+    gap: 2.5rem !important;
+  }
+}
