@@ -1,10 +1,14 @@
 // src/lib/supabase-server.ts
 //
 // Server-side Supabase client for the marketing site.
-// Reads the user session from cookies — used to detect logged-in state.
+//
+// Reads auth cookies scoped to NEXT_PUBLIC_COOKIE_DOMAIN (e.g. ".humankind.center"
+// in production), allowing detection of users logged in via app.humankind.center.
 
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
+
+const COOKIE_DOMAIN = process.env.NEXT_PUBLIC_COOKIE_DOMAIN || undefined;
 
 export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
@@ -19,9 +23,12 @@ export async function createSupabaseServerClient() {
         },
         setAll(cookiesToSet) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
+            cookiesToSet.forEach(({ name, value, options }) => {
+              const merged: CookieOptions = COOKIE_DOMAIN
+                ? { ...options, domain: COOKIE_DOMAIN }
+                : options;
+              cookieStore.set(name, value, merged);
+            });
           } catch {
             // Server Components can't set cookies — safe to ignore here
             // since we're only reading auth state.
