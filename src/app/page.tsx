@@ -1,14 +1,12 @@
 // src/app/page.tsx
 //
-// Marketing homepage. Pulls the hero variant + section sequence from
-// src/config/ab.ts so you can rotate variants for A/B testing.
-//
-// Pulls upcoming events from Supabase to feed the SectionEvents component.
+// Marketing homepage. Fetches events + broadcast data from the app's
+// public API endpoint (server-to-server, no CORS issue) and passes them
+// down to the section components as props.
 
 import { pageMeta } from "@/config/metadata";
 export const metadata = pageMeta.home;
 
-import { createSupabaseServerClient } from "@/lib/supabase-server";
 import { MobileSplash } from "@/components/marketing/mobile-splash";
 import { MarketingNav } from "@/components/marketing/marketing-nav";
 import { HomepageFooter } from "@/components/homepage/HomepageFooter";
@@ -32,30 +30,55 @@ import { SectionLiveCTA }      from "@/components/homepage/sections/SectionLiveC
 import { SectionPricing }      from "@/components/homepage/sections/SectionPricing";
 import { SectionCommunityCTA } from "@/components/homepage/sections/SectionCommunityCTA";
 
-async function getUpcomingEvents() {
+const APP_URL = "https://app.humankind.center";
+
+type EventRow = {
+  id: string;
+  title: string;
+  starts_at: string | null;
+  image_url: string | null;
+  venue_name: string | null;
+  price_label: string | null;
+};
+
+type Broadcast = {
+  enabled: boolean;
+  isLive: boolean;
+  thumbnail: string | null;
+  videoId: string | null;
+  nowPlaying: string;
+};
+
+const EMPTY_BROADCAST: Broadcast = {
+  enabled: true,
+  isLive: false,
+  thumbnail: null,
+  videoId: null,
+  nowPlaying: "Humankind Broadcast",
+};
+
+async function getHomepageData(): Promise<{ events: EventRow[]; broadcast: Broadcast }> {
   try {
-    const supabase = await createSupabaseServerClient();
-    const { data } = await supabase
-      .from("events")
-      .select("id, title, starts_at, image_url, venue_name, price_label")
-      .eq("sync_status", "active")
-      .gte("starts_at", new Date().toISOString())
-      .order("starts_at", { ascending: true })
-      .limit(3);
-    return data ?? [];
-  } catch {
-    return [];
+    const res = await fetch(`${APP_URL}/api/public/homepage-data`, {
+      // Revalidate every 60 seconds — fresh enough for events + live broadcast
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) throw new Error(`status ${res.status}`);
+    const data = await res.json();
+    return {
+      events: Array.isArray(data.events) ? data.events : [],
+      broadcast: data.broadcast ?? EMPTY_BROADCAST,
+    };
+  } catch (err) {
+    console.warn("[homepage] failed to load app data:", err);
+    return { events: [], broadcast: EMPTY_BROADCAST };
   }
 }
 
 const HEROES = { A: HeroA, B: HeroB, C: HeroC, D: HeroD };
 
 export default async function HomePage() {
-  // Note: marketing site does NOT redirect logged-in users away from the homepage.
-  // Logged-in users see the marketing site like everyone else, with the nav showing
-  // "Hi, [name] · Go to app →" in the upper right.
-
-  const events = await getUpcomingEvents();
+  const { events, broadcast } = await getHomepageData();
   const Hero = HEROES[ab.hero] ?? HeroA;
 
   function renderSection(key: string) {
@@ -69,7 +92,7 @@ export default async function HomePage() {
       case "testimonials":  return <SectionTestimonials key={key} />;
       case "faq":           return <SectionFAQ key={key} />;
       case "events":        return <SectionEvents key={key} events={events} />;
-      case "liveCTA":       return <SectionLiveCTA key={key} />;
+      case "liveCTA":       return <SectionLiveCTA key={key} broadcast={broadcast} />;
       case "pricing":       return <SectionPricing key={key} />;
       case "communityCTA":  return <SectionCommunityCTA key={key} />;
       default:              return null;
@@ -86,13 +109,9 @@ export default async function HomePage() {
         overflowX: "hidden",
       }}
     >
-      {/* Mobile splash */}
       <MobileSplash />
-
-      {/* Universal nav */}
       <MarketingNav />
 
-      {/* Homepage content (hidden on mobile via CSS below) */}
       <div id="homepage-content">
         <Hero />
         {ab.sections.map((key) => renderSection(key))}

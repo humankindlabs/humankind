@@ -1,57 +1,34 @@
 // src/components/homepage/sections/SectionLiveCTA.tsx
 //
 // Live broadcast preview section.
-// Marketing-site version: uses the public supabase-server client.
-// (The original app used createSupabaseAdminClient, but we don't expose
-//  service role on the marketing site.)
+// Now takes broadcast info as a prop (passed from page.tsx, which fetches
+// from app's /api/public/homepage-data endpoint). Avoids RLS issues that
+// blocked direct Supabase reads from the marketing site's anon key.
 
 import Link from "next/link";
-import { createSupabaseServerClient } from "@/lib/supabase-server";
 
-type Setting = { key: string; value: string };
-type QueueRow = { video_id: string | null; thumbnail: string | null; title: string | null };
+type Broadcast = {
+  enabled: boolean;
+  isLive: boolean;
+  thumbnail: string | null;
+  videoId: string | null;
+  nowPlaying: string;
+};
 
-async function getBroadcastStatus() {
-  try {
-    const supabase = await createSupabaseServerClient();
-    const [settingsR, queueR] = await Promise.all([
-      supabase
-        .from("settings")
-        .select("key, value")
-        .in("key", ["broadcast_enabled", "active_livestream_id"]),
-      supabase
-        .from("broadcast_queue")
-        .select("video_id, thumbnail, title")
-        .eq("content_type", "content")
-        .order("sort_order", { ascending: true })
-        .limit(1),
-    ]);
+const DEFAULT_BROADCAST: Broadcast = {
+  enabled: true,
+  isLive: false,
+  thumbnail: null,
+  videoId: null,
+  nowPlaying: "Humankind Broadcast",
+};
 
-    const settings = Object.fromEntries(
-      ((settingsR.data ?? []) as Setting[]).map((s) => [s.key, s.value])
-    );
-    const firstVideo = ((queueR.data ?? []) as QueueRow[])[0] ?? null;
-
-    return {
-      enabled: settings.broadcast_enabled !== "false",
-      isLive: !!settings.active_livestream_id,
-      thumbnail: firstVideo?.thumbnail ?? null,
-      videoId: firstVideo?.video_id ?? null,
-      nowPlaying: firstVideo?.title ?? "Humankind Broadcast",
-    };
-  } catch {
-    return {
-      enabled: true,
-      isLive: false,
-      thumbnail: null,
-      videoId: null,
-      nowPlaying: "Humankind Broadcast",
-    };
-  }
-}
-
-export async function SectionLiveCTA() {
-  const { isLive, thumbnail, videoId, nowPlaying } = await getBroadcastStatus();
+export function SectionLiveCTA({
+  broadcast = DEFAULT_BROADCAST,
+}: {
+  broadcast?: Broadcast;
+}) {
+  const { isLive, thumbnail, videoId, nowPlaying } = broadcast;
 
   return (
     <section style={{ padding: "6rem 2rem", maxWidth: "1200px", margin: "0 auto" }}>
@@ -158,6 +135,7 @@ export async function SectionLiveCTA() {
                   allow="autoplay"
                 />
               ) : thumbnail ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={thumbnail}
                   alt=""
