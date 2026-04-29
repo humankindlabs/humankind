@@ -109,7 +109,6 @@ export default async function HomePage() {
         overflowX: "hidden",
       }}
     >
-      <MobileSplash />
       <MarketingNav />
 
       <div id="homepage-content">
