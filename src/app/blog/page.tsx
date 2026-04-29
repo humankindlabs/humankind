@@ -92,7 +92,7 @@ export default function BlogPage() {
           {/* Soro renders blog posts into this div */}
           <div id="soro-blog" />
           <Script
-            src="https://app.trysoro.com/api/embed/d2632287-da04-4301-b808-04b2f8e186bd"
+            src="https://app.trysoro.com/api/embed/d2632287-da04-4301-b808-04b2f8e186bd?theme=dark"
             strategy="afterInteractive"
           />
         </div>
