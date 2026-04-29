@@ -99,6 +99,10 @@ export default function BlogPage() {
       </section>
 
       <HomepageFooter />
+      <style>{`
+        .soro-blog { background: #00031C; }
+        
+      `}</style>
     </div>
   );
 }
