@@ -25,6 +25,21 @@ async redirects() {
         destination: "https://app.humankind.center/media",
         permanent: true,
       },
+      {
+        source: "/about-us",
+        destination: "https://humankind.center/what-is-humankind",
+        permanent: true,
+      },
+      {
+        source: "/terms-of-use",
+        destination: "https://humankind.center/terms",
+        permanent: true,
+      },
+      {
+        source: "/terms-of-use",
+        destination: "https://humankind.center/terms",
+        permanent: true,
+      },
     ];
   },
 };
