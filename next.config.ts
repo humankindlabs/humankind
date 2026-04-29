@@ -10,6 +10,23 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "app.humankind.center" },
     ],
   },
+
+
+async redirects() {
+    return [
+      // Pages migrated to marketing site (humankind.center)
+      {
+        source: "/events",
+        destination: "https://app.humankind.center/events",
+        permanent: true,
+      },
+      {
+        source: "/tv",
+        destination: "https://app.humankind.center/media",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

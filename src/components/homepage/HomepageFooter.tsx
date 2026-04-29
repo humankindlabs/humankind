@@ -4,8 +4,9 @@ import Link from "next/link";
 const NAV_LINKS = [
   { label: "Our Vision",            href: "/our-vision" },
   { label: "What Is Humankind?",    href: "/what-is-humankind" },
-  { label: "Meditation Downloads",  href: "https://humankind.center/meditation-downloads/", external: true },
-  { label: "Shop Our Merch",        href: "https://humankind.center/shop/", external: true },
+  { label: "Blog",                  href: "/blog" },
+  { label: "Meditation Downloads",  href: "/meditation-downloads" },
+  { label: "Connect",               href: "/connect" },
   { label: "Book the Venue",        href: "https://venue.humankind.center/", external: true },
 ];
 
