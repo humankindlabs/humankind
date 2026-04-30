@@ -36,8 +36,8 @@ async redirects() {
         permanent: true,
       },
       {
-        source: "/terms-of-use",
-        destination: "https://humankind.center/terms",
+        source: "/pricing",
+        destination: "https://app.humankind.center/register",
         permanent: true,
       },
     ];

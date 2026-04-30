@@ -1,59 +1,26 @@
 // src/components/marketing/marketing-nav.tsx
 //
-// Marketing nav with logged-in user widget.
+// Client-side marketing nav with cross-domain user widget.
 //
-// Logged in:    avatar circle + name/email on right side, clicking goes to dashboard
-// Not logged in: "Sign in" link + "Join Free" CTA button
-//
-// Auth detection happens server-side via cross-domain cookies on .humankind.center.
+// Strategy: use the useHumankindUser hook to fetch user identity from
+// app.humankind.center via CORS. While loading, show a subtle skeleton
+// in place of the auth buttons (no "Sign in" flash for logged-in users).
+
+"use client";
 
 import Link from "next/link";
-import { createSupabaseServerClient } from "@/lib/supabase-server";
+import { useHumankindUser } from "@/hooks/use-humankind-user";
 
 const APP_URL = "https://app.humankind.center";
 
 const NAV_LINKS = [
-  { label: "Our Vision", href: "/our-vision" },
-  { label: "What is humankind", href: "/what-is-humankind" },
-  { label: "Conf",        href: "https://conf.humankind.center/", external: true },
+  { label: "Our Vision",         href: "/our-vision" },
+  { label: "What is humankind",  href: "/what-is-humankind" },
+  { label: "Conf",               href: "https://conf.humankind.center/", external: true },
 ] as const;
 
-export async function MarketingNav() {
-  let userInfo: {
-    firstName: string | null;
-    lastName: string | null;
-    email: string | null;
-    avatarUrl: string | null;
-  } | null = null;
-
-  try {
-    const supabase = await createSupabaseServerClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (user) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("first_name, last_name, avatar_url, email")
-        .eq("id", user.id)
-        .maybeSingle<{
-          first_name: string | null;
-          last_name: string | null;
-          avatar_url: string | null;
-          email: string | null;
-        }>();
-
-      userInfo = {
-        firstName: profile?.first_name ?? null,
-        lastName: profile?.last_name ?? null,
-        email: profile?.email ?? user.email ?? null,
-        avatarUrl: profile?.avatar_url ?? null,
-      };
-    }
-  } catch {
-    // Anonymous visitor or auth error — render the signed-out state
-  }
+export function MarketingNav() {
+  const { user, loading } = useHumankindUser();
 
   return (
     <nav
@@ -113,38 +80,13 @@ export async function MarketingNav() {
       </div>
 
       {/* Right side */}
-      <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-        {userInfo ? (
-          <UserWidget user={userInfo} />
+      <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", minHeight: "44px" }}>
+        {loading ? (
+          <NavSkeleton />
+        ) : user ? (
+          <UserWidget user={user} />
         ) : (
-          <>
-            <a
-              href={`${APP_URL}/login`}
-              style={{
-                fontSize: "0.875rem",
-                color: "rgba(255,255,255,0.7)",
-                textDecoration: "none",
-                padding: "0.5rem 0.75rem",
-                fontWeight: 500,
-              }}
-            >
-              Sign in
-            </a>
-            <a
-              href={`${APP_URL}/register`}
-              style={{
-                background: "#0CB001",
-                color: "#fff",
-                padding: "0.5rem 1.125rem",
-                borderRadius: "99px",
-                fontSize: "0.875rem",
-                fontWeight: 600,
-                textDecoration: "none",
-              }}
-            >
-              Join Free
-            </a>
-          </>
+          <SignedOutButtons />
         )}
       </div>
 
@@ -153,15 +95,72 @@ export async function MarketingNav() {
           .hk-marketing-nav-links { display: none !important; }
           .hk-user-widget-info { display: none !important; }
         }
+        @keyframes hk-pulse {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 0.8; }
+        }
       `}</style>
     </nav>
   );
 }
 
-// ───────────────────────────────────────────────────────────────────────
-// Logged-in user widget — avatar + name/email block, links to dashboard
-// ───────────────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────────────────
+// Loading skeleton — subtle pulsing circle, matches user widget size
+// ────────────────────────────────────────────────────────────────────────
+function NavSkeleton() {
+  return (
+    <div
+      style={{
+        width: "44px",
+        height: "44px",
+        borderRadius: "50%",
+        background: "rgba(255,255,255,0.08)",
+        animation: "hk-pulse 1.4s ease-in-out infinite",
+      }}
+      aria-label="Loading"
+    />
+  );
+}
 
+// ────────────────────────────────────────────────────────────────────────
+// Signed-out buttons
+// ────────────────────────────────────────────────────────────────────────
+function SignedOutButtons() {
+  return (
+    <>
+      <a
+        href={`${APP_URL}/login`}
+        style={{
+          fontSize: "0.875rem",
+          color: "rgba(255,255,255,0.7)",
+          textDecoration: "none",
+          padding: "0.5rem 0.75rem",
+          fontWeight: 500,
+        }}
+      >
+        Sign in
+      </a>
+      <a
+        href={`${APP_URL}/register`}
+        style={{
+          background: "#0CB001",
+          color: "#fff",
+          padding: "0.5rem 1.125rem",
+          borderRadius: "99px",
+          fontSize: "0.875rem",
+          fontWeight: 600,
+          textDecoration: "none",
+        }}
+      >
+        Join Free
+      </a>
+    </>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// Logged-in user widget — avatar + name/email, links to dashboard
+// ────────────────────────────────────────────────────────────────────────
 function UserWidget({
   user,
 }: {
