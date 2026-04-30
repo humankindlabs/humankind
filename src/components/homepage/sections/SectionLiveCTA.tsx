@@ -1,31 +1,20 @@
 // src/components/homepage/sections/SectionLiveCTA.tsx
 import Link from "next/link";
-import { createSupabaseAdminClient } from "@/lib/supabase-admin";
 
-async function getBroadcastStatus() {
-  try {
-    const admin = createSupabaseAdminClient();
-    const [settingsR, queueR] = await Promise.all([
-      admin.from("settings").select("key, value").in("key", ["broadcast_enabled", "active_livestream_id"]),
-      admin.from("broadcast_queue").select("video_id, thumbnail, title").eq("content_type", "content").order("sort_order", { ascending: true }).limit(1),
-    ]);
+type Broadcast = {
+  enabled?: boolean;
+  isLive: boolean;
+  thumbnail: string | null;
+  videoId: string | null;
+  nowPlaying: string;
+};
 
-    const settings = Object.fromEntries((settingsR.data ?? []).map(s => [s.key, s.value]));
-    const firstVideo = queueR.data?.[0] ?? null;
-    return {
-      enabled: settings.broadcast_enabled !== "false",
-      isLive: !!settings.active_livestream_id,
-      thumbnail: firstVideo?.thumbnail ?? null,
-      videoId: firstVideo?.video_id ?? null,
-      nowPlaying: firstVideo?.title ?? "Humankind Broadcast",
-    };
-  } catch {
-    return { enabled: true, isLive: false, thumbnail: null, videoId: null, nowPlaying: "Humankind Broadcast" };
-  }
-}
+type Props = {
+  broadcast: Broadcast;
+};
 
-export async function SectionLiveCTA() {
-  const { isLive, thumbnail, videoId, nowPlaying } = await getBroadcastStatus();
+export function SectionLiveCTA({ broadcast }: Props) {
+  const { isLive, thumbnail, videoId, nowPlaying } = broadcast;
 
   return (
     <section
@@ -91,15 +80,13 @@ export async function SectionLiveCTA() {
               width: "100%",
             }}
           >
-            {/* 16:9 preview — uses padding-top fallback for older browsers, aspect-ratio for modern */}
+            {/* 16:9 preview */}
             <div
               style={{
                 position: "relative",
                 aspectRatio: "16 / 9",
                 background: "#000",
                 width: "100%",
-                // Fallback for browsers that don't support aspect-ratio (very old iOS Safari)
-                paddingTop: "0",
               }}
             >
               {videoId ? (
@@ -199,7 +186,7 @@ export async function SectionLiveCTA() {
                   display: "flex",
                   alignItems: "center",
                   gap: "0.625rem",
-                  minWidth: 0, // Allows text-overflow ellipsis to work in flex
+                  minWidth: 0,
                   flex: 1,
                 }}
               >

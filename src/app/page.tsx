@@ -7,7 +7,6 @@
 import { pageMeta } from "@/config/metadata";
 export const metadata = pageMeta.home;
 
-import { MobileSplash } from "@/components/marketing/mobile-splash";
 import { MarketingNav } from "@/components/marketing/marketing-nav";
 import { HomepageFooter } from "@/components/homepage/HomepageFooter";
 import { ab } from "@/config/ab";
