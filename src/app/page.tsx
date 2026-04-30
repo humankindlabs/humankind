@@ -122,9 +122,9 @@ export default async function HomePage() {
         @media (max-width: 1023px) {
           .hk-home-split { grid-template-columns: 1fr !important; }
         }
-        @media (max-width: 1023px) {
-          #homepage-content { display: none; }
-          .hk-marketing-nav { display: none !important; }
+        // @media (max-width: 1023px) {
+        //   #homepage-content { display: none; }
+        //   .hk-marketing-nav { display: none !important; }
         }
         @media (min-width: 1024px) {
           .hk-mobile-splash { display: none !important; }
