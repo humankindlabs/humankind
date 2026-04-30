@@ -1,7 +1,11 @@
 // src/components/marketing/marketing-nav.tsx
 //
-// DEBUG VERSION — temporarily logs auth detection details to Vercel function logs
-// so we can see exactly why the user widget isn't showing.
+// Marketing nav with logged-in user widget.
+//
+// Logged in:    avatar circle + name/email on right side, clicking goes to dashboard
+// Not logged in: "Sign in" link + "Join Free" CTA button
+//
+// Auth detection happens server-side via cross-domain cookies on .humankind.center.
 
 import Link from "next/link";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
@@ -22,20 +26,14 @@ export async function MarketingNav() {
     avatarUrl: string | null;
   } | null = null;
 
-  // ── DEBUG: log every step so we can see what's happening in Vercel logs ─
-  let debugMsg = "[MarketingNav] ";
-
   try {
     const supabase = await createSupabaseServerClient();
-    debugMsg += "client-created ";
-
-    const authResult = await supabase.auth.getUser();
-    debugMsg += `getUser-returned (error=${authResult.error?.message || "none"}, user=${authResult.data.user?.id || "null"}) `;
-
-    const user = authResult.data.user;
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (user) {
-      const profileResult = await supabase
+      const { data: profile } = await supabase
         .from("profiles")
         .select("first_name, last_name, avatar_url, email")
         .eq("id", user.id)
@@ -46,26 +44,16 @@ export async function MarketingNav() {
           email: string | null;
         }>();
 
-      debugMsg += `profile-query (error=${profileResult.error?.message || "none"}, found=${!!profileResult.data}) `;
-
-      const profile = profileResult.data;
-
       userInfo = {
         firstName: profile?.first_name ?? null,
         lastName: profile?.last_name ?? null,
         email: profile?.email ?? user.email ?? null,
         avatarUrl: profile?.avatar_url ?? null,
       };
-      debugMsg += `userInfo-set (firstName=${userInfo.firstName}) `;
-    } else {
-      debugMsg += "no-user-from-getUser ";
     }
-  } catch (err) {
-    debugMsg += `THROWN: ${err instanceof Error ? err.message : String(err)} `;
+  } catch {
+    // Anonymous visitor or auth error — render the signed-out state
   }
-
-  // Print to server logs so we can see in Vercel
-  console.log(debugMsg);
 
   return (
     <nav
@@ -169,6 +157,10 @@ export async function MarketingNav() {
     </nav>
   );
 }
+
+// ───────────────────────────────────────────────────────────────────────
+// Logged-in user widget — avatar + name/email block, links to dashboard
+// ───────────────────────────────────────────────────────────────────────
 
 function UserWidget({
   user,
