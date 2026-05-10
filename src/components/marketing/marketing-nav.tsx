@@ -177,7 +177,7 @@ function UserWidget({
 
   return (
     <a
-      href={`${APP_URL}/dashboard`}
+      href={`${APP_URL}/media`}
       style={{
         display: "flex",
         alignItems: "center",

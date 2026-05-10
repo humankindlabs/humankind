@@ -119,7 +119,7 @@ export default function NotFound() {
           Back to Home
         </Link>
         <a
-          href="https://app.humankind.center/dashboard"
+          href="https://app.humankind.center/media"
           style={{
             display: "inline-flex",
             alignItems: "center",

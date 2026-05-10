@@ -2,7 +2,7 @@
   "name": "humankind",
   "short_name": "humankind",
   "description": "Sedona's consciousness community — live streams, governance, and connection.",
-  "start_url": "/dashboard",
+  "start_url": "/media",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
