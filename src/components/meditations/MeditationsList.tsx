@@ -1,7 +1,6 @@
-// src/components/meditations/MeditationsList.tsx
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { EmailGateModal } from "./EmailGateModal";
 
 type Meditation = {
@@ -13,7 +12,10 @@ type Meditation = {
   duration_seconds: number | null;
 };
 
-const DESCRIPTION_MAX = 220;
+type LoopMode = "off" | "track" | "soft";
+
+const SOFT_LOOP_SKIP_SECONDS = 10;
+const SOFT_LOOP_FADE_SECONDS = 4;
 
 export function MeditationsList({
   meditations,
@@ -22,75 +24,153 @@ export function MeditationsList({
   meditations: Meditation[];
   userEmail: string | null;
 }) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [pendingDownload, setPendingDownload] = useState<Meditation | null>(null);
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const audioRefsMap = useRef<Map<string, HTMLAudioElement>>(new Map());
+  const [activeId, setActiveId] = useState<string | null>(meditations[0]?.id ?? null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [loopMode, setLoopMode] = useState<LoopMode>("off");
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<"popular" | "duration" | "title">("popular");
 
-  function registerAudio(id: string, el: HTMLAudioElement | null) {
-    if (el) audioRefsMap.current.set(id, el);
-    else audioRefsMap.current.delete(id);
-  }
+  const activeTrack = useMemo(
+    () => meditations.find((m) => m.id === activeId) ?? meditations[0] ?? null,
+    [activeId, meditations],
+  );
 
-  function handlePlay(id: string) {
-    // Pause every other audio when one starts playing
-    audioRefsMap.current.forEach((audio, audioId) => {
-      if (audioId !== id && !audio.paused) {
-        audio.pause();
+  const visibleMeditations = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    const rows = query
+      ? meditations.filter((m) =>
+          `${m.title} ${m.description ?? ""}`.toLowerCase().includes(query),
+        )
+      : [...meditations];
+
+    if (sort === "title") rows.sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === "duration") {
+      rows.sort((a, b) => (a.duration_seconds ?? 0) - (b.duration_seconds ?? 0));
+    }
+    return rows;
+  }, [meditations, search, sort]);
+
+  useEffect(() => {
+    if (!activeTrack || !audioRef.current) return;
+    const audio = audioRef.current;
+    const shouldResume = isPlaying;
+    audio.src = activeTrack.audio_url;
+    audio.currentTime = 0;
+    setCurrentTime(0);
+    setDuration(activeTrack.duration_seconds ?? 0);
+    audio.loop = loopMode === "track";
+    audio.volume = 1;
+    if (shouldResume) {
+      audio.play().catch(() => setIsPlaying(false));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTrack?.id]);
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.loop = loopMode === "track";
+  }, [loopMode]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    function onLoaded() {
+      setDuration(audio?.duration && Number.isFinite(audio.duration)
+        ? audio.duration
+        : activeTrack?.duration_seconds ?? 0);
+    }
+
+    function onTime() {
+      if (!audio) return;
+      setCurrentTime(audio.currentTime);
+
+      if (loopMode !== "soft" || !audio.duration || audio.duration <= 24) return;
+      const softEnd = audio.duration - SOFT_LOOP_SKIP_SECONDS;
+      if (audio.currentTime < softEnd - SOFT_LOOP_FADE_SECONDS) {
+        audio.volume = Math.min(1, audio.volume + 0.08);
+        return;
       }
-    });
-    setPlayingId(id);
-  }
 
-  function handlePause(id: string) {
-    if (playingId === id) setPlayingId(null);
-  }
-
-  function handleEnded(id: string) {
-    setPlayingId(null);
-    // Auto-continue: play the next meditation in the list
-    const idx = meditations.findIndex((m) => m.id === id);
-    if (idx >= 0 && idx < meditations.length - 1) {
-      const next = meditations[idx + 1];
-      const nextAudio = audioRefsMap.current.get(next.id);
-      if (nextAudio) {
-        // Small delay so the current row's UI clears before next plays
-        setTimeout(() => {
-          nextAudio.play().catch((err) => {
-            console.warn("[meditations] autoplay blocked:", err);
-          });
-          // Scroll the next item into view
-          nextAudio.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 200);
+      const remaining = Math.max(softEnd - audio.currentTime, 0);
+      audio.volume = Math.max(0.12, remaining / SOFT_LOOP_FADE_SECONDS);
+      if (audio.currentTime >= softEnd) {
+        audio.currentTime = SOFT_LOOP_SKIP_SECONDS;
+        audio.volume = 0.12;
       }
     }
-  }
+
+    function onEnded() {
+      if (loopMode === "track") return;
+      playNext();
+    }
+
+    audio.addEventListener("loadedmetadata", onLoaded);
+    audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("ended", onEnded);
+    return () => {
+      audio.removeEventListener("loadedmetadata", onLoaded);
+      audio.removeEventListener("timeupdate", onTime);
+      audio.removeEventListener("ended", onEnded);
+    };
+  });
 
   if (meditations.length === 0) {
     return (
-      <div
-        style={{
-          padding: "4rem 1.5rem",
-          background: "rgba(255,255,255,0.025)",
-          border: "1px dashed rgba(255,255,255,0.08)",
-          borderRadius: "1.25rem",
-          textAlign: "center",
-          color: "rgba(255,255,255,0.5)",
-        }}
-      >
-        <p style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>🎵</p>
-        <p style={{ margin: 0, fontSize: "0.9375rem" }}>
-          No meditations available yet — check back soon.
-        </p>
+      <div className="hk-empty">
+        <p>No meditations available yet. Check back soon.</p>
+        <style jsx>{styles}</style>
       </div>
     );
   }
 
-  function handleDownloadClick(m: Meditation) {
-    if (userEmail) {
-      triggerDownload(m);
-    } else {
-      setPendingDownload(m);
+  function toggleTrack(track: Meditation) {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (activeId !== track.id) {
+      setActiveId(track.id);
+      setIsPlaying(true);
+      return;
     }
+
+    if (audio.paused) {
+      audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+    } else {
+      audio.pause();
+      setIsPlaying(false);
+    }
+  }
+
+  function playNext() {
+    if (!activeTrack) return;
+    const idx = meditations.findIndex((m) => m.id === activeTrack.id);
+    const next = meditations[(idx + 1) % meditations.length];
+    setActiveId(next.id);
+    setIsPlaying(true);
+  }
+
+  function playPrevious() {
+    if (!activeTrack) return;
+    const idx = meditations.findIndex((m) => m.id === activeTrack.id);
+    const previous = meditations[(idx - 1 + meditations.length) % meditations.length];
+    setActiveId(previous.id);
+    setIsPlaying(true);
+  }
+
+  function seek(percent: number) {
+    const audio = audioRef.current;
+    if (!audio || !duration) return;
+    audio.currentTime = duration * percent;
+    setCurrentTime(audio.currentTime);
+  }
+
+  function handleDownloadClick(m: Meditation) {
+    if (userEmail) triggerDownload(m);
+    else setPendingDownload(m);
   }
 
   function triggerDownload(m: Meditation) {
@@ -104,23 +184,134 @@ export function MeditationsList({
     document.body.removeChild(a);
   }
 
+  const progress = duration ? Math.min(100, (currentTime / duration) * 100) : 0;
+
   return (
     <>
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-        {meditations.map((m, idx) => (
-          <MeditationRow
-            key={m.id}
-            meditation={m}
-            index={idx}
-            isPlaying={playingId === m.id}
-            registerAudio={registerAudio}
-            onPlay={() => handlePlay(m.id)}
-            onPause={() => handlePause(m.id)}
-            onEnded={() => handleEnded(m.id)}
-            onDownload={() => handleDownloadClick(m)}
-          />
-        ))}
+      <audio ref={audioRef} preload="metadata" />
+
+      <div className="hk-library">
+        <div className="hk-toolbar">
+          <div className="hk-filters" aria-label="Meditation library filters">
+            <span>All {meditations.length}</span>
+            <span>Continuous play</span>
+            <span>Soft loop</span>
+          </div>
+
+          <div className="hk-tools">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search meditations..."
+              aria-label="Search meditations"
+            />
+            <label>
+              Sort by
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value as typeof sort)}
+              >
+                <option value="popular">Most popular</option>
+                <option value="duration">Duration</option>
+                <option value="title">Title</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div className="hk-list" style={{ paddingBottom: activeTrack ? 132 : 0 }}>
+          {visibleMeditations.map((m) => {
+            const active = activeTrack?.id === m.id;
+            const playing = active && isPlaying;
+            return (
+              <div key={m.id} className={`hk-track ${active ? "active" : ""}`}>
+                <button
+                  type="button"
+                  className="hk-art"
+                  onClick={() => toggleTrack(m)}
+                  aria-label={`${playing ? "Pause" : "Play"} ${m.title}`}
+                >
+                  {m.thumbnail_url ? <img src={m.thumbnail_url} alt="" /> : <span />}
+                  <span className={`hk-play ${playing ? "pause" : ""}`} />
+                </button>
+
+                <div className="hk-title">
+                  <strong>{m.title}</strong>
+                  <span>humankind meditation</span>
+                </div>
+
+                <p className="hk-description">{m.description || "Meditation, ambient, peaceful"}</p>
+
+                <div className="hk-time">
+                  <strong>{formatDuration(m.duration_seconds)}</strong>
+                  <span>continuous play</span>
+                </div>
+
+                <div className="hk-actions">
+                  <button type="button" title="Play next" onClick={() => setActiveId(m.id)} aria-label={`Play ${m.title} next`}>
+                    <span className="hk-plus" />
+                  </button>
+                  <button type="button" title="Copy link" onClick={() => navigator.clipboard?.writeText(window.location.href)} aria-label="Copy page link">
+                    <span className="hk-link" />
+                  </button>
+                  <button type="button" title="Download" onClick={() => handleDownloadClick(m)} aria-label={`Download ${m.title}`}>
+                    <span className="hk-download" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
+
+      {activeTrack && (
+        <div className="hk-player" role="region" aria-label="Audio player">
+          <button
+            className="hk-player-art"
+            type="button"
+            onClick={() => toggleTrack(activeTrack)}
+            aria-label={isPlaying ? "Pause current track" : "Play current track"}
+          >
+            {activeTrack.thumbnail_url ? <img src={activeTrack.thumbnail_url} alt="" /> : <span />}
+            <span className={`hk-play ${isPlaying ? "pause" : ""}`} />
+          </button>
+
+          <div className="hk-player-main">
+            <button
+              type="button"
+              className="hk-progress"
+              onClick={(e) => seek(e.nativeEvent.offsetX / e.currentTarget.clientWidth)}
+              aria-label="Seek track"
+            >
+              <span style={{ width: `${progress}%` }} />
+            </button>
+            <div className="hk-player-copy">
+              <div>
+                <strong>{activeTrack.title}</strong>
+                <span>humankind meditation</span>
+              </div>
+              <p>{formatClock(currentTime)} / {formatClock(duration || activeTrack.duration_seconds || 0)}</p>
+            </div>
+          </div>
+
+          <div className="hk-player-controls">
+            <button type="button" onClick={playPrevious} aria-label="Previous track">Previous</button>
+            <button type="button" onClick={() => toggleTrack(activeTrack)} aria-label={isPlaying ? "Pause" : "Play"}>
+              {isPlaying ? "Pause" : "Play"}
+            </button>
+            <button type="button" onClick={playNext} aria-label="Next track">Next</button>
+            <button
+              type="button"
+              className={loopMode !== "off" ? "on" : ""}
+              onClick={() => setLoopMode(loopMode === "off" ? "track" : loopMode === "track" ? "soft" : "off")}
+              title="Loop mode"
+            >
+              {loopMode === "off" ? "Loop off" : loopMode === "track" ? "Loop track" : "Soft loop"}
+            </button>
+            <button type="button" onClick={() => handleDownloadClick(activeTrack)}>Download</button>
+          </div>
+        </div>
+      )}
 
       {pendingDownload && (
         <EmailGateModal
@@ -133,301 +324,419 @@ export function MeditationsList({
           }}
         />
       )}
+
+      <style jsx>{styles}</style>
     </>
   );
 }
 
-// ───────────────────────────────────────────────────────────────────────
-// Single meditation row
-// ───────────────────────────────────────────────────────────────────────
-function MeditationRow({
-  meditation,
-  index,
-  isPlaying,
-  registerAudio,
-  onPlay,
-  onPause,
-  onEnded,
-  onDownload,
-}: {
-  meditation: Meditation;
-  index: number;
-  isPlaying: boolean;
-  registerAudio: (id: string, el: HTMLAudioElement | null) => void;
-  onPlay: () => void;
-  onPause: () => void;
-  onEnded: () => void;
-  onDownload: () => void;
-}) {
-  const [expanded, setExpanded] = useState(false);
-  const description = meditation.description ?? "";
-  const isLong = description.length > DESCRIPTION_MAX;
-  const displayed = !isLong || expanded
-    ? description
-    : description.slice(0, DESCRIPTION_MAX).trimEnd() + "…";
-
-  return (
-    <div
-      style={{
-        position: "relative",
-        padding: "1.5rem",
-        background: isPlaying
-          ? "linear-gradient(135deg, rgba(12,176,1,0.08) 0%, rgba(255,255,255,0.025) 100%)"
-          : "rgba(255,255,255,0.025)",
-        border: isPlaying
-          ? "1px solid rgba(12,176,1,0.35)"
-          : "1px solid rgba(255,255,255,0.07)",
-        borderRadius: "1.25rem",
-        transition: "all 0.25s ease",
-        boxShadow: isPlaying ? "0 0 32px rgba(12,176,1,0.08)" : "none",
-      }}
-      className="hk-meditation-row"
-    >
-      {/* Number badge in corner */}
-      <div
-        style={{
-          position: "absolute",
-          top: "1rem",
-          right: "1.25rem",
-          fontSize: "0.6875rem",
-          color: "rgba(255,255,255,0.25)",
-          fontWeight: 600,
-          letterSpacing: "0.05em",
-        }}
-      >
-        {String(index + 1).padStart(2, "0")}
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          gap: "1.5rem",
-          alignItems: "flex-start",
-        }}
-        className="hk-meditation-row-flex"
-      >
-        {/* Thumbnail */}
-        <div
-          style={{
-            width: 144,
-            height: 144,
-            minWidth: 144,
-            borderRadius: "1rem",
-            overflow: "hidden",
-            background: "linear-gradient(135deg, rgba(12,176,1,0.12) 0%, rgba(12,176,1,0.04) 100%)",
-            border: "1px solid rgba(255,255,255,0.06)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-            position: "relative",
-            boxShadow: isPlaying
-              ? "0 0 24px rgba(12,176,1,0.18)"
-              : "0 4px 16px rgba(0,0,0,0.25)",
-            transition: "box-shadow 0.25s",
-          }}
-          className="hk-meditation-thumb"
-        >
-          {meditation.thumbnail_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={meditation.thumbnail_url}
-              alt=""
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          ) : (
-            <span style={{ fontSize: "2.5rem", opacity: 0.6 }}>🎵</span>
-          )}
-          {isPlaying && (
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: "rgba(0,3,28,0.4)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  gap: "3px",
-                  alignItems: "flex-end",
-                  height: "32px",
-                }}
-              >
-                <span className="hk-bar" style={{ animationDelay: "0s" }} />
-                <span className="hk-bar" style={{ animationDelay: "0.15s" }} />
-                <span className="hk-bar" style={{ animationDelay: "0.3s" }} />
-                <span className="hk-bar" style={{ animationDelay: "0.45s" }} />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Body */}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          {isPlaying && (
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.375rem",
-                padding: "0.1875rem 0.625rem",
-                background: "rgba(12,176,1,0.15)",
-                border: "1px solid rgba(12,176,1,0.3)",
-                borderRadius: "99px",
-                fontSize: "0.625rem",
-                fontWeight: 700,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: "#0CB001",
-                marginBottom: "0.625rem",
-              }}
-            >
-              <span
-                style={{
-                  width: "6px",
-                  height: "6px",
-                  borderRadius: "50%",
-                  background: "#0CB001",
-                  animation: "hk-blink 1.2s infinite",
-                }}
-              />
-              Now Playing
-            </div>
-          )}
-
-          <h3
-            style={{
-              fontSize: "1.25rem",
-              fontWeight: 700,
-              color: "#fff",
-              margin: "0 0 0.5rem",
-              letterSpacing: "-0.015em",
-              lineHeight: 1.25,
-              paddingRight: "2rem",
-            }}
-          >
-            {meditation.title}
-          </h3>
-
-          {description && (
-            <div
-              style={{
-                fontSize: "0.9375rem",
-                color: "rgba(255,255,255,0.6)",
-                lineHeight: 1.6,
-                marginBottom: "1rem",
-              }}
-            >
-              {displayed}{" "}
-              {isLong && (
-                <button
-                  onClick={() => setExpanded((v) => !v)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "#0CB001",
-                    fontSize: "0.8125rem",
-                    fontWeight: 500,
-                    cursor: "pointer",
-                    padding: 0,
-                    marginLeft: "0.25rem",
-                    fontFamily: "inherit",
-                  }}
-                >
-                  {expanded ? "Show less" : "Read more"}
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Audio + actions */}
-          <div
-            style={{
-              display: "flex",
-              gap: "0.75rem",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <audio
-              ref={(el) => registerAudio(meditation.id, el)}
-              controls
-              src={meditation.audio_url}
-              preload="metadata"
-              onPlay={onPlay}
-              onPause={onPause}
-              onEnded={onEnded}
-              style={{
-                flex: "1 1 280px",
-                minWidth: "240px",
-                height: 36,
-              }}
-            >
-              Your browser does not support audio playback.
-            </audio>
-
-            <button
-              onClick={onDownload}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.375rem",
-                padding: "0.5rem 1rem",
-                borderRadius: "99px",
-                background: "transparent",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.18)",
-                fontSize: "0.8125rem",
-                fontWeight: 600,
-                cursor: "pointer",
-                fontFamily: "inherit",
-                transition: "background 0.15s, border-color 0.15s",
-                whiteSpace: "nowrap",
-              }}
-              className="hk-download-btn"
-            >
-              ↓ Download
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <style>{`
-        .hk-meditation-row:hover {
-          border-color: rgba(255,255,255,0.14);
-        }
-        .hk-download-btn:hover {
-          background: rgba(12,176,1,0.1);
-          border-color: rgba(12,176,1,0.4);
-        }
-        .hk-bar {
-          width: 4px;
-          background: #0CB001;
-          border-radius: 2px;
-          animation: hk-bar-bounce 0.9s ease-in-out infinite;
-          height: 8px;
-          display: inline-block;
-        }
-        @keyframes hk-bar-bounce {
-          0%, 100% { height: 8px; }
-          50% { height: 28px; }
-        }
-        @media (max-width: 580px) {
-          .hk-meditation-row-flex {
-            flex-direction: column !important;
-            gap: 1rem !important;
-          }
-          .hk-meditation-thumb {
-            width: 100% !important;
-            height: 200px !important;
-            min-width: 0 !important;
-          }
-        }
-      `}</style>
-    </div>
-  );
+function formatDuration(seconds: number | null) {
+  if (!seconds || seconds <= 0) return "--";
+  return formatClock(seconds);
 }
+
+function formatClock(seconds: number) {
+  if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${String(secs).padStart(2, "0")}`;
+}
+
+const styles = `
+  .hk-library {
+    width: 100%;
+  }
+
+  .hk-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .hk-filters,
+  .hk-tools,
+  .hk-actions,
+  .hk-player-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .hk-filters span,
+  .hk-tools select,
+  .hk-actions button,
+  .hk-player-controls button {
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .hk-filters span {
+    display: inline-flex;
+    min-height: 2rem;
+    align-items: center;
+    border-radius: 999px;
+    background: rgba(12,176,1,0.1);
+    border: 1px solid rgba(12,176,1,0.2);
+    color: #0CB001;
+    padding: 0 0.85rem;
+  }
+
+  .hk-tools input,
+  .hk-tools select {
+    height: 2.25rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.035);
+    border-radius: 999px;
+    color: #fff;
+    padding: 0 0.85rem;
+    outline: none;
+  }
+
+  .hk-tools label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.8125rem;
+    font-weight: 700;
+  }
+
+  .hk-list {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .hk-track {
+    display: grid;
+    grid-template-columns: 72px minmax(180px, 1.1fr) minmax(220px, 1.6fr) 96px auto;
+    align-items: center;
+    gap: 1.5rem;
+    min-height: 80px;
+    padding: 0.5rem;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+  }
+
+  .hk-track:hover,
+  .hk-track.active {
+    border-color: rgba(12,176,1,0.72);
+    background: rgba(12,176,1,0.055);
+  }
+
+  .hk-track:hover {
+    transform: translateY(-1px);
+  }
+
+  .hk-art,
+  .hk-player-art {
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    padding: 0;
+    background: #111;
+    cursor: pointer;
+  }
+
+  .hk-art {
+    width: 64px;
+    height: 64px;
+    border-radius: 6px;
+  }
+
+  .hk-art img,
+  .hk-player-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hk-art::after,
+  .hk-player-art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,3,28,0.18);
+    opacity: 0;
+    transition: opacity 160ms ease;
+  }
+
+  .hk-track.active .hk-art::after,
+  .hk-art:hover::after,
+  .hk-player-art:hover::after {
+    opacity: 1;
+  }
+
+  .hk-play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    transform: translate(-38%, -50%);
+    width: 0;
+    height: 0;
+    border-top: 11px solid transparent;
+    border-bottom: 11px solid transparent;
+    border-left: 16px solid #fff;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+  }
+
+  .hk-play.pause {
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 22px;
+    border: 0;
+  }
+
+  .hk-play.pause::before,
+  .hk-play.pause::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 6px;
+    height: 22px;
+    background: #fff;
+    border-radius: 2px;
+  }
+
+  .hk-play.pause::before { left: 0; }
+  .hk-play.pause::after { right: 0; }
+
+  .hk-title strong,
+  .hk-time strong,
+  .hk-player-copy strong {
+    display: block;
+    color: #fff;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+  }
+
+  .hk-title span,
+  .hk-time span,
+  .hk-player-copy span {
+    display: block;
+    color: rgba(255,255,255,0.38);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+  }
+
+  .hk-description {
+    color: #fff;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+  }
+
+  .hk-actions {
+    justify-content: flex-end;
+  }
+
+  .hk-actions button {
+    position: relative;
+    color: #0CB001;
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 999px;
+  }
+
+  .hk-plus,
+  .hk-link,
+  .hk-download {
+    display: inline-block;
+    position: relative;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+  }
+
+  .hk-plus::before,
+  .hk-plus::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 2px;
+    width: 2px;
+    height: 14px;
+    background: #0CB001;
+    border-radius: 999px;
+  }
+
+  .hk-plus::after {
+    transform: rotate(90deg);
+  }
+
+  .hk-link::before,
+  .hk-link::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 7px;
+    border: 2px solid #0CB001;
+    border-radius: 999px;
+    transform: rotate(-35deg);
+  }
+
+  .hk-link::before {
+    left: 1px;
+    top: 7px;
+  }
+
+  .hk-link::after {
+    right: 1px;
+    top: 3px;
+  }
+
+  .hk-download::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 1px;
+    width: 2px;
+    height: 11px;
+    background: #0CB001;
+    border-radius: 999px;
+  }
+
+  .hk-download::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid #0CB001;
+    border-bottom: 2px solid #0CB001;
+    transform: rotate(-45deg);
+  }
+
+  .hk-actions button:hover,
+  .hk-player-controls button:hover,
+  .hk-player-controls button.on {
+    background: rgba(12,176,1,0.13);
+    color: #0CB001;
+  }
+
+  .hk-player {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    z-index: 80;
+    transform: translateX(-50%);
+    width: min(920px, calc(100vw - 2rem));
+    min-height: 88px;
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: rgba(18,22,25,0.96);
+    border: 1px solid rgba(12,176,1,0.18);
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    backdrop-filter: blur(18px);
+  }
+
+  .hk-player-art {
+    width: 52px;
+    height: 52px;
+    border-radius: 6px;
+  }
+
+  .hk-player-main {
+    min-width: 0;
+  }
+
+  .hk-progress {
+    width: 100%;
+    height: 6px;
+    border: 0;
+    border-radius: 999px;
+    padding: 0;
+    overflow: hidden;
+    background: rgba(0,0,0,0.45);
+    cursor: pointer;
+  }
+
+  .hk-progress span {
+    display: block;
+    height: 100%;
+    background: #0CB001;
+    border-radius: inherit;
+  }
+
+  .hk-player-copy {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.7rem;
+  }
+
+  .hk-player-copy p {
+    margin: 0;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .hk-player-controls button {
+    color: rgba(255,255,255,0.72);
+    border-radius: 999px;
+    padding: 0.5rem 0.65rem;
+  }
+
+  .hk-empty {
+    padding: 4rem 1.5rem;
+    background: rgba(255,255,255,0.025);
+    border: 1px dashed rgba(255,255,255,0.08);
+    border-radius: 1.25rem;
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+  }
+
+  @media (max-width: 860px) {
+    .hk-toolbar,
+    .hk-player-copy {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .hk-track {
+      grid-template-columns: 64px minmax(0, 1fr);
+      gap: 0.85rem;
+    }
+
+    .hk-description,
+    .hk-time,
+    .hk-actions {
+      grid-column: 2;
+    }
+
+    .hk-actions {
+      justify-content: flex-start;
+    }
+
+    .hk-player {
+      grid-template-columns: 52px minmax(0, 1fr);
+    }
+
+    .hk-player-controls {
+      grid-column: 1 / -1;
+    }
+  }
+`;

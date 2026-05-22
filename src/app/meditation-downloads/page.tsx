@@ -6,9 +6,9 @@ import { MeditationsList } from "@/components/meditations/MeditationsList";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = {
-  title: "Meditation Downloads",
+  title: "Meditation Music",
   description:
-    "Free guided meditations from humankind. Stream or download to take with you anywhere.",
+    "Stream continuous meditation music from humankind, or download tracks for offline practice.",
 };
 
 const APP_URL = "https://app.humankind.center";
@@ -65,11 +65,10 @@ export default async function MeditationDownloadsPage() {
     >
       <MarketingNav />
 
-      {/* Hero */}
       <section
         style={{
-          padding: "5rem 2rem 3rem",
-          textAlign: "center",
+          padding: "4.5rem 2rem 2rem",
+          textAlign: "left",
           position: "relative",
           overflow: "hidden",
         }}
@@ -89,12 +88,12 @@ export default async function MeditationDownloadsPage() {
             pointerEvents: "none",
           }}
         />
-        <div style={{ position: "relative", maxWidth: "720px", margin: "0 auto" }}>
+        <div style={{ position: "relative", maxWidth: "1320px", margin: "0 auto" }}>
           <p
             className="hk-eyebrow"
             style={{ color: "#0CB001", marginBottom: "1rem" }}
           >
-            Audio Library
+            Audio library
           </p>
           <h1
             style={{
@@ -106,7 +105,7 @@ export default async function MeditationDownloadsPage() {
               color: "#fff",
             }}
           >
-            Meditation Downloads
+            Meditation Music
           </h1>
           <p
             style={{
@@ -114,18 +113,18 @@ export default async function MeditationDownloadsPage() {
               color: "rgba(255,255,255,0.55)",
               lineHeight: 1.7,
               maxWidth: "560px",
-              margin: "0 auto",
+              margin: 0,
             }}
           >
-            Stream guided meditations or download them for offline practice.
-            New recordings added regularly.
+            Press the artwork to play, keep the bottom player open, and let the
+            library continue into the next track. Downloads are available after
+            sign-in or by joining the mailing list.
           </p>
         </div>
       </section>
 
-      {/* List */}
-      <section style={{ padding: "2rem 2rem 5rem" }}>
-        <div style={{ maxWidth: "880px", margin: "0 auto" }}>
+      <section style={{ padding: "0 2rem 6rem" }}>
+        <div style={{ maxWidth: "1320px", margin: "0 auto" }}>
           <MeditationsList
             meditations={meditations}
             userEmail={userEmail}
