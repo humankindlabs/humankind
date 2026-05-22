@@ -25,6 +25,9 @@ export function MeditationsList({
   userEmail: string | null;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const softAudioRef = useRef<HTMLAudioElement | null>(null);
+  const softLoopingRef = useRef(false);
+  const softLoopTimerRef = useRef<number | null>(null);
   const [pendingDownload, setPendingDownload] = useState<Meditation | null>(null);
   const [activeId, setActiveId] = useState<string | null>(meditations[0]?.id ?? null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -64,6 +67,7 @@ export function MeditationsList({
     setDuration(activeTrack.duration_seconds ?? 0);
     audio.loop = loopMode === "track";
     audio.volume = 1;
+    stopSoftLoopLayer();
     if (shouldResume) {
       audio.play().catch(() => setIsPlaying(false));
     }
@@ -71,7 +75,11 @@ export function MeditationsList({
   }, [activeTrack?.id]);
 
   useEffect(() => {
-    if (audioRef.current) audioRef.current.loop = loopMode === "track";
+    if (audioRef.current) {
+      audioRef.current.loop = loopMode === "track";
+      audioRef.current.volume = 1;
+    }
+    stopSoftLoopLayer();
   }, [loopMode]);
 
   useEffect(() => {
@@ -88,18 +96,14 @@ export function MeditationsList({
       if (!audio) return;
       setCurrentTime(audio.currentTime);
 
-      if (loopMode !== "soft" || !audio.duration || audio.duration <= 24) return;
-      const softEnd = audio.duration - SOFT_LOOP_SKIP_SECONDS;
-      if (audio.currentTime < softEnd - SOFT_LOOP_FADE_SECONDS) {
-        audio.volume = Math.min(1, audio.volume + 0.08);
-        return;
-      }
-
-      const remaining = Math.max(softEnd - audio.currentTime, 0);
-      audio.volume = Math.max(0.12, remaining / SOFT_LOOP_FADE_SECONDS);
-      if (audio.currentTime >= softEnd) {
-        audio.currentTime = SOFT_LOOP_SKIP_SECONDS;
-        audio.volume = 0.12;
+      if (
+        loopMode === "soft" &&
+        audio.duration &&
+        audio.duration > SOFT_LOOP_SKIP_SECONDS * 2 + SOFT_LOOP_FADE_SECONDS &&
+        audio.currentTime >= audio.duration - SOFT_LOOP_SKIP_SECONDS &&
+        !softLoopingRef.current
+      ) {
+        startSoftLoopCrossfade();
       }
     }
 
@@ -117,6 +121,10 @@ export function MeditationsList({
       audio.removeEventListener("ended", onEnded);
     };
   });
+
+  useEffect(() => {
+    return () => stopSoftLoopLayer();
+  }, []);
 
   if (meditations.length === 0) {
     return (
@@ -141,6 +149,7 @@ export function MeditationsList({
       audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
     } else {
       audio.pause();
+      stopSoftLoopLayer();
       setIsPlaying(false);
     }
   }
@@ -184,11 +193,74 @@ export function MeditationsList({
     document.body.removeChild(a);
   }
 
+  function stopSoftLoopLayer() {
+    if (softLoopTimerRef.current !== null) {
+      window.clearInterval(softLoopTimerRef.current);
+      softLoopTimerRef.current = null;
+    }
+    softLoopingRef.current = false;
+    const softAudio = softAudioRef.current;
+    if (softAudio) {
+      softAudio.pause();
+      softAudio.removeAttribute("src");
+      softAudio.load();
+      softAudio.volume = 0;
+    }
+    if (audioRef.current) audioRef.current.volume = 1;
+  }
+
+  function startSoftLoopCrossfade() {
+    const audio = audioRef.current;
+    const softAudio = softAudioRef.current;
+    if (!audio || !softAudio || !activeTrack || !audio.src) return;
+
+    softLoopingRef.current = true;
+    softAudio.src = audio.src;
+    softAudio.currentTime = SOFT_LOOP_SKIP_SECONDS;
+    softAudio.volume = 0;
+    softAudio.play().catch(() => {
+      softLoopingRef.current = false;
+      audio.currentTime = SOFT_LOOP_SKIP_SECONDS;
+      audio.volume = 1;
+    });
+
+    const startedAt = performance.now();
+    const fadeMs = SOFT_LOOP_FADE_SECONDS * 1000;
+
+    softLoopTimerRef.current = window.setInterval(() => {
+      const primary = audioRef.current;
+      const overlay = softAudioRef.current;
+      if (!primary || !overlay) return;
+
+      const elapsed = performance.now() - startedAt;
+      const mix = Math.min(1, elapsed / fadeMs);
+      primary.volume = Math.max(0, 1 - mix);
+      overlay.volume = mix;
+
+      if (mix >= 1) {
+        if (softLoopTimerRef.current !== null) {
+          window.clearInterval(softLoopTimerRef.current);
+          softLoopTimerRef.current = null;
+        }
+        primary.pause();
+        primary.currentTime = overlay.currentTime;
+        primary.volume = 1;
+        primary.play().catch(() => setIsPlaying(false));
+        overlay.pause();
+        overlay.removeAttribute("src");
+        overlay.load();
+        overlay.volume = 0;
+        softLoopingRef.current = false;
+      }
+    }, 60);
+  }
+
   const progress = duration ? Math.min(100, (currentTime / duration) * 100) : 0;
 
   return (
     <>
       <audio ref={audioRef} preload="metadata" />
+      <audio ref={softAudioRef} preload="auto" />
 
       <div className="hk-library">
         <div className="hk-toolbar">
@@ -267,6 +339,15 @@ export function MeditationsList({
       {activeTrack && (
         <div className="hk-player" role="region" aria-label="Audio player">
           <button
+            type="button"
+            className="hk-progress"
+            onClick={(e) => seek(e.nativeEvent.offsetX / e.currentTarget.clientWidth)}
+            aria-label="Seek track"
+          >
+            <span style={{ width: `${progress}%` }} />
+          </button>
+
+          <button
             className="hk-player-art"
             type="button"
             onClick={() => toggleTrack(activeTrack)}
@@ -277,14 +358,6 @@ export function MeditationsList({
           </button>
 
           <div className="hk-player-main">
-            <button
-              type="button"
-              className="hk-progress"
-              onClick={(e) => seek(e.nativeEvent.offsetX / e.currentTarget.clientWidth)}
-              aria-label="Seek track"
-            >
-              <span style={{ width: `${progress}%` }} />
-            </button>
             <div className="hk-player-copy">
               <div>
                 <strong>{activeTrack.title}</strong>
@@ -643,7 +716,7 @@ const styles = `
     grid-template-columns: 58px minmax(0, 1fr) auto;
     align-items: center;
     gap: 1rem;
-    padding: 0.75rem;
+    padding: 1rem 0.75rem 0.75rem;
     background: rgba(18,22,25,0.96);
     border: 1px solid rgba(12,176,1,0.18);
     border-radius: 8px;
@@ -662,6 +735,9 @@ const styles = `
   }
 
   .hk-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 6px;
     border: 0;
