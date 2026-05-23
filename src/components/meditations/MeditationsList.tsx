@@ -327,7 +327,7 @@ export function MeditationsList({
                     <span className="hk-link" />
                   </button>
                   <button type="button" title="Download" onClick={() => handleDownloadClick(m)} aria-label={`Download ${m.title}`}>
-                    <span className="hk-download" />
+                    <i className="fi fi-rr-download" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -339,15 +339,6 @@ export function MeditationsList({
       {activeTrack && (
         <div className="hk-player" role="region" aria-label="Audio player">
           <button
-            type="button"
-            className="hk-progress"
-            onClick={(e) => seek(e.nativeEvent.offsetX / e.currentTarget.clientWidth)}
-            aria-label="Seek track"
-          >
-            <span style={{ width: `${progress}%` }} />
-          </button>
-
-          <button
             className="hk-player-art"
             type="button"
             onClick={() => toggleTrack(activeTrack)}
@@ -358,6 +349,14 @@ export function MeditationsList({
           </button>
 
           <div className="hk-player-main">
+            <button
+              type="button"
+              className="hk-progress"
+              onClick={(e) => seek(e.nativeEvent.offsetX / e.currentTarget.clientWidth)}
+              aria-label="Seek track"
+            >
+              <span style={{ width: `${progress}%` }} />
+            </button>
             <div className="hk-player-copy">
               <div>
                 <strong>{activeTrack.title}</strong>
@@ -368,20 +367,27 @@ export function MeditationsList({
           </div>
 
           <div className="hk-player-controls">
-            <button type="button" onClick={playPrevious} aria-label="Previous track">Previous</button>
-            <button type="button" onClick={() => toggleTrack(activeTrack)} aria-label={isPlaying ? "Pause" : "Play"}>
-              {isPlaying ? "Pause" : "Play"}
+            <button type="button" onClick={playPrevious} aria-label="Previous track" title="Previous">
+              <span className="hk-prev-icon" />
             </button>
-            <button type="button" onClick={playNext} aria-label="Next track">Next</button>
+            <button type="button" onClick={() => toggleTrack(activeTrack)} aria-label={isPlaying ? "Pause" : "Play"}>
+              <span className={`hk-control-play ${isPlaying ? "pause" : ""}`} />
+            </button>
+            <button type="button" onClick={playNext} aria-label="Next track" title="Next">
+              <span className="hk-next-icon" />
+            </button>
             <button
               type="button"
               className={loopMode !== "off" ? "on" : ""}
               onClick={() => setLoopMode(loopMode === "off" ? "track" : loopMode === "track" ? "soft" : "off")}
-              title="Loop mode"
+              title={loopMode === "off" ? "Loop off" : loopMode === "track" ? "Loop track" : "Soft loop"}
+              aria-label={loopMode === "off" ? "Loop off" : loopMode === "track" ? "Loop track" : "Soft loop"}
             >
-              {loopMode === "off" ? "Loop off" : loopMode === "track" ? "Loop track" : "Soft loop"}
+              <span className={`hk-loop-icon ${loopMode}`} />
             </button>
-            <button type="button" onClick={() => handleDownloadClick(activeTrack)}>Download</button>
+            <button type="button" onClick={() => handleDownloadClick(activeTrack)} aria-label="Download track" title="Download">
+              <i className="fi fi-rr-download" aria-hidden="true" />
+            </button>
           </div>
         </div>
       )}
@@ -628,8 +634,7 @@ const styles = `
   }
 
   .hk-plus,
-  .hk-link,
-  .hk-download {
+  .hk-link {
     display: inline-block;
     position: relative;
     width: 18px;
@@ -674,27 +679,14 @@ const styles = `
     top: 3px;
   }
 
-  .hk-download::before {
-    content: "";
-    position: absolute;
-    left: 8px;
-    top: 1px;
-    width: 2px;
-    height: 11px;
-    background: #0CB001;
-    border-radius: 999px;
-  }
-
-  .hk-download::after {
-    content: "";
-    position: absolute;
-    left: 4px;
-    top: 8px;
-    width: 8px;
-    height: 8px;
-    border-left: 2px solid #0CB001;
-    border-bottom: 2px solid #0CB001;
-    transform: rotate(-45deg);
+  .hk-actions i,
+  .hk-player-controls i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #0CB001;
+    font-size: 1.05rem;
+    line-height: 1;
   }
 
   .hk-actions button:hover,
@@ -716,7 +708,7 @@ const styles = `
     grid-template-columns: 58px minmax(0, 1fr) auto;
     align-items: center;
     gap: 1rem;
-    padding: 1rem 0.75rem 0.75rem;
+    padding: 0.75rem;
     background: rgba(18,22,25,0.96);
     border: 1px solid rgba(12,176,1,0.18);
     border-radius: 8px;
@@ -735,9 +727,6 @@ const styles = `
   }
 
   .hk-progress {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 6px;
     border: 0;
@@ -771,9 +760,123 @@ const styles = `
   }
 
   .hk-player-controls button {
+    min-width: 34px;
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: rgba(255,255,255,0.72);
     border-radius: 999px;
-    padding: 0.5rem 0.65rem;
+    padding: 0.45rem;
+  }
+
+  .hk-control-play,
+  .hk-prev-icon,
+  .hk-next-icon,
+  .hk-loop-icon {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+  }
+
+  .hk-control-play::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 10px solid currentColor;
+  }
+
+  .hk-control-play.pause::before,
+  .hk-control-play.pause::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    width: 5px;
+    height: 14px;
+    background: currentColor;
+    border-radius: 1px;
+    border: 0;
+  }
+
+  .hk-control-play.pause::before { left: 4px; }
+  .hk-control-play.pause::after { right: 4px; }
+
+  .hk-prev-icon::before,
+  .hk-next-icon::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+  }
+
+  .hk-prev-icon::before {
+    left: 2px;
+    border-right: 10px solid currentColor;
+  }
+
+  .hk-next-icon::before {
+    right: 2px;
+    border-left: 10px solid currentColor;
+  }
+
+  .hk-prev-icon::after,
+  .hk-next-icon::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    width: 2px;
+    height: 12px;
+    background: currentColor;
+    border-radius: 999px;
+  }
+
+  .hk-prev-icon::after { left: 1px; }
+  .hk-next-icon::after { right: 1px; }
+
+  .hk-loop-icon::before {
+    content: "";
+    position: absolute;
+    inset: 3px 1px;
+    border: 2px solid currentColor;
+    border-left-color: transparent;
+    border-radius: 999px;
+  }
+
+  .hk-loop-icon::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 3px;
+    width: 6px;
+    height: 6px;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    transform: rotate(45deg);
+  }
+
+  .hk-loop-icon.off {
+    opacity: 0.55;
+  }
+
+  .hk-loop-icon.track::before {
+    box-shadow: inset 0 0 0 999px rgba(12,176,1,0.08);
+  }
+
+  .hk-loop-icon.soft::before {
+    border-style: dashed;
+  }
+
+  .hk-loop-icon.soft::after {
+    box-shadow: -8px 8px 0 -3px currentColor;
   }
 
   .hk-empty {
