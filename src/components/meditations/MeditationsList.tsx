@@ -256,6 +256,12 @@ export function MeditationsList({
   }
 
   const progress = duration ? Math.min(100, (currentTime / duration) * 100) : 0;
+  const loopButtonLabel =
+    loopMode === "off"
+      ? "Enable repeat"
+      : loopMode === "track"
+        ? "Enable soft loop"
+        : "Turn repeat off";
 
   return (
     <>
@@ -327,7 +333,7 @@ export function MeditationsList({
                     <span className="hk-link" />
                   </button>
                   <button type="button" title="Download" onClick={() => handleDownloadClick(m)} aria-label={`Download ${m.title}`}>
-                    <i className="fi fi-rr-download" aria-hidden="true" />
+                    <span className="hk-download-icon" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -367,26 +373,26 @@ export function MeditationsList({
           </div>
 
           <div className="hk-player-controls">
-            <button type="button" onClick={playPrevious} aria-label="Previous track" title="Previous">
+            <button type="button" onClick={playPrevious} aria-label="Previous track" data-tooltip="Previous">
               <span className="hk-prev-icon" />
             </button>
-            <button type="button" onClick={() => toggleTrack(activeTrack)} aria-label={isPlaying ? "Pause" : "Play"}>
+            <button type="button" onClick={() => toggleTrack(activeTrack)} aria-label={isPlaying ? "Pause" : "Play"} data-tooltip={isPlaying ? "Pause" : "Play"}>
               <span className={`hk-control-play ${isPlaying ? "pause" : ""}`} />
             </button>
-            <button type="button" onClick={playNext} aria-label="Next track" title="Next">
+            <button type="button" onClick={playNext} aria-label="Next track" data-tooltip="Next">
               <span className="hk-next-icon" />
             </button>
             <button
               type="button"
               className={loopMode !== "off" ? "on" : ""}
               onClick={() => setLoopMode(loopMode === "off" ? "track" : loopMode === "track" ? "soft" : "off")}
-              title={loopMode === "off" ? "Loop off" : loopMode === "track" ? "Loop track" : "Soft loop"}
-              aria-label={loopMode === "off" ? "Loop off" : loopMode === "track" ? "Loop track" : "Soft loop"}
+              aria-label={loopButtonLabel}
+              data-tooltip={loopButtonLabel}
             >
-              <span className={`hk-loop-icon ${loopMode}`} />
+              <span className={`hk-loop-icon ${loopMode}`}>{loopMode === "soft" ? "x∞" : "∞"}</span>
             </button>
-            <button type="button" onClick={() => handleDownloadClick(activeTrack)} aria-label="Download track" title="Download">
-              <i className="fi fi-rr-download" aria-hidden="true" />
+            <button type="button" onClick={() => handleDownloadClick(activeTrack)} aria-label="Download track" data-tooltip="Download">
+              <span className="hk-download-icon" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -634,7 +640,8 @@ const styles = `
   }
 
   .hk-plus,
-  .hk-link {
+  .hk-link,
+  .hk-download-icon {
     display: inline-block;
     position: relative;
     width: 18px;
@@ -679,14 +686,27 @@ const styles = `
     top: 3px;
   }
 
-  .hk-actions i,
-  .hk-player-controls i {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #0CB001;
-    font-size: 1.05rem;
-    line-height: 1;
+  .hk-download-icon::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 1px;
+    width: 2px;
+    height: 10px;
+    background: currentColor;
+    border-radius: 999px;
+  }
+
+  .hk-download-icon::after {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 7px;
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg);
   }
 
   .hk-actions button:hover,
@@ -760,6 +780,7 @@ const styles = `
   }
 
   .hk-player-controls button {
+    position: relative;
     min-width: 34px;
     min-height: 34px;
     display: inline-flex;
@@ -770,10 +791,34 @@ const styles = `
     padding: 0.45rem;
   }
 
+  .hk-player-controls button::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 9px);
+    transform: translateX(-50%) translateY(4px);
+    pointer-events: none;
+    white-space: nowrap;
+    border-radius: 4px;
+    background: rgba(38,38,42,0.98);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0;
+    padding: 0.45rem 0.55rem;
+    transition: opacity 140ms ease, transform 140ms ease;
+  }
+
+  .hk-player-controls button:hover::after,
+  .hk-player-controls button:focus-visible::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
   .hk-control-play,
   .hk-prev-icon,
-  .hk-next-icon,
-  .hk-loop-icon {
+  .hk-next-icon {
     position: relative;
     display: inline-block;
     width: 18px;
@@ -842,41 +887,29 @@ const styles = `
   .hk-prev-icon::after { left: 1px; }
   .hk-next-icon::after { right: 1px; }
 
-  .hk-loop-icon::before {
-    content: "";
-    position: absolute;
-    inset: 3px 1px;
-    border: 2px solid currentColor;
-    border-left-color: transparent;
-    border-radius: 999px;
-  }
-
-  .hk-loop-icon::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 3px;
-    width: 6px;
-    height: 6px;
-    border-top: 2px solid currentColor;
-    border-right: 2px solid currentColor;
-    transform: rotate(45deg);
+  .hk-loop-icon {
+    display: inline-flex;
+    min-width: 22px;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.45);
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1;
   }
 
   .hk-loop-icon.off {
-    opacity: 0.55;
+    color: rgba(255,255,255,0.45);
   }
 
-  .hk-loop-icon.track::before {
-    box-shadow: inset 0 0 0 999px rgba(12,176,1,0.08);
+  .hk-loop-icon.track,
+  .hk-loop-icon.soft {
+    color: #0CB001;
   }
 
-  .hk-loop-icon.soft::before {
-    border-style: dashed;
-  }
-
-  .hk-loop-icon.soft::after {
-    box-shadow: -8px 8px 0 -3px currentColor;
+  .hk-loop-icon.soft {
+    font-size: 0.92rem;
+    letter-spacing: -0.08em;
   }
 
   .hk-empty {
