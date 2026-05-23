@@ -333,7 +333,7 @@ export function MeditationsList({
                     <span className="hk-link" />
                   </button>
                   <button type="button" title="Download" onClick={() => handleDownloadClick(m)} aria-label={`Download ${m.title}`}>
-                    <span className="hk-download-icon" aria-hidden="true" />
+                    <i className="fi fi-rr-download" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -392,7 +392,7 @@ export function MeditationsList({
               <span className={`hk-loop-icon ${loopMode}`}>{loopMode === "soft" ? "x∞" : "∞"}</span>
             </button>
             <button type="button" onClick={() => handleDownloadClick(activeTrack)} aria-label="Download track" data-tooltip="Download">
-              <span className="hk-download-icon" aria-hidden="true" />
+              <i className="fi fi-rr-download" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -640,8 +640,7 @@ const styles = `
   }
 
   .hk-plus,
-  .hk-link,
-  .hk-download-icon {
+  .hk-link {
     display: inline-block;
     position: relative;
     width: 18px;
@@ -686,27 +685,14 @@ const styles = `
     top: 3px;
   }
 
-  .hk-download-icon::before {
-    content: "";
-    position: absolute;
-    left: 8px;
-    top: 1px;
-    width: 2px;
-    height: 10px;
-    background: currentColor;
-    border-radius: 999px;
-  }
-
-  .hk-download-icon::after {
-    content: "";
-    position: absolute;
-    left: 4px;
-    top: 7px;
-    width: 8px;
-    height: 8px;
-    border-left: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(-45deg);
+  .hk-actions i,
+  .hk-player-controls i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
+    font-size: 1.05rem;
+    line-height: 1;
   }
 
   .hk-actions button:hover,

@@ -56,6 +56,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
+      <head>
+        <link
+          rel="stylesheet"
+          href="/icons/uicons-regular-rounded-4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
+        />
+      </head>
       <body
         style={{
           background: "#00031C",
