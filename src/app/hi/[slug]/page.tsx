@@ -11,6 +11,7 @@ export function generateStaticParams() {
   return landingPages.map((page) => ({ slug: page.slug }));
 }
 
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const page = getLandingPage(slug);
