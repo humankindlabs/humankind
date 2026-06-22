@@ -10,9 +10,11 @@ import { HomepageFooter } from "@/components/homepage/HomepageFooter";
 const SECTIONS = [
   {
     title: "Information We Collect",
-    content: `When you create an account or use our platform, we collect information you provide directly to us, including your name, email address, password, and optional profile details such as phone number, birthdate, location, and social media links.
+    content: `When you create an account or use our platform, we collect information you provide directly to us, including your name, email address, password, and optional profile details such as phone number, birthdate, location, and social media links. If you provide a mobile number and opt in, we use it to send account-verification codes and transactional SMS notifications.
 
-We also collect information automatically when you use our services, including usage data, device information, IP address, browser type, pages visited, and interactions with our content. If you make a purchase, we process payment information through our third-party payment processor (Stripe) — we do not store your full card details on our servers.
+When you book or host through Humankind Stay, we collect booking information such as stay dates, guest counts, listing and property details, pricing, and the payout and tax details hosts provide to set up payments.
+
+We also collect information automatically when you use our services, including usage data, device information, IP address, browser type, pages visited, and interactions with our content — including on our connected-TV applications. If you make a purchase, we process payment information through our third-party payment processor (Stripe) — we do not store your full card details on our servers.
 
 For in-person events, we may collect check-in data associated with your account.`,
   },
@@ -31,16 +33,31 @@ For in-person events, we may collect check-in data associated with your account.
 We will not sell your personal information to third parties for their marketing purposes.`,
   },
   {
+    title: "SMS / Text Messaging",
+    content: `If you provide your mobile number and opt in, we use it to send you SMS text messages for account verification (one-time passcodes) and transactional notifications (such as booking and account updates). SMS is delivered through our messaging provider, Twilio, which processes your number solely to deliver these messages on our behalf.
+
+No mobile information will be shared with third parties or affiliates for marketing or promotional purposes. Information sharing with subcontractors that provide support services, such as our SMS provider, is permitted solely to deliver the messages you have requested. Text-messaging originator opt-in data and consent are not shared with any third parties for any other purpose.
+
+You can opt out of SMS at any time by replying STOP to any message; reply HELP for help. Message frequency varies, and message and data rates may apply. Opting out of SMS does not affect transactional emails or in-app notifications that are necessary to operate your account.`,
+  },
+  {
+    title: "Humankind Stay (Hosts & Guests)",
+    content: `When you use Humankind Stay, we process booking information to facilitate the stay between hosts and guests. To complete a booking, we share the information necessary to coordinate it between the relevant host and guest — for example, names, booking details, and contact information needed for the stay.
+
+Host payouts are processed through Stripe Connect. Payout, identity, and tax information that hosts provide during Stripe onboarding is collected and handled by Stripe under its own terms; we receive only limited status information (such as whether payouts are enabled) and do not store hosts' full bank details.`,
+  },
+  {
     title: "Sharing of Information",
     content: `We may share your information in the following circumstances:
 
-• With service providers who assist us in operating our platform (including Supabase for data storage, Stripe for payments, and email service providers for notifications)
+• With service providers who assist us in operating our platform — including Supabase (data storage), Stripe and Stripe Connect (payments and host payouts), Twilio (SMS delivery), and email service providers (notifications)
+• Between hosts and guests, the information necessary to coordinate a Humankind Stay booking
 • With event co-producers when you register for a specific event, limited to what is necessary for event coordination
 • If required by law, regulation, or legal process
 • To protect the rights, property, or safety of Humankind, our users, or others
 • With your consent or at your direction
 
-We require all third-party service providers to maintain appropriate security measures and restrict their use of your information to the purposes for which we share it.`,
+We require all third-party service providers to maintain appropriate security measures and restrict their use of your information to the purposes for which we share it. As noted above, mobile opt-in information and SMS consent are never shared with third parties for marketing or promotional purposes.`,
   },
   {
     title: "Data Retention",
@@ -66,6 +83,7 @@ You can control cookie settings through your browser. Disabling certain cookies 
 • Download a copy of your data (available in Account → Data & Privacy Controls)
 • Request deletion of your account and associated data
 • Opt out of marketing communications at any time by unsubscribing from emails or adjusting your notification preferences
+• Opt out of SMS text messages at any time by replying STOP to any message
 • Object to or restrict certain processing of your information
 
 To exercise any of these rights, you can use the controls in your account settings or contact us at hello@humankind.center.`,
@@ -112,10 +130,10 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p style={{ fontSize: "0.9375rem", color: "rgba(255,255,255,0.4)" }}>
-            Last updated: January 2026
+            Last updated: June 2026
           </p>
           <p style={{ fontSize: "1rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, marginTop: "1.25rem" }}>
-            Humankind Center ("Humankind," "we," "us," or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share information about you when you use our platform at app.humankind.center and related services.
+            Humankind Center ("Humankind," "we," "us," or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share information about you when you use our platform and services — including app.humankind.center, humankind.center, the Humankind Stay booking platform at stay.humankind.center, our connected-TV applications, and our email and SMS communications.
           </p>
         </div>
 

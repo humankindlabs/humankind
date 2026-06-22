@@ -9,9 +9,11 @@ import { HomepageFooter } from "@/components/homepage/HomepageFooter";
 const SECTIONS = [
   {
     title: "Acceptance of Terms",
-    content: `By accessing or using the Humankind platform at app.humankind.center (the "Platform"), you agree to be bound by these Terms of Use ("Terms"). If you do not agree to these Terms, please do not use our Platform.
+    content: `By accessing or using the Humankind platform and services — including our member app at app.humankind.center, our marketing site at humankind.center, the Humankind Stay booking platform at stay.humankind.center, our connected-TV applications (including Amazon Fire TV and Apple TV), and our email and SMS/text-message communications (collectively, the "Platform") — you agree to be bound by these Terms of Use ("Terms"). If you do not agree to these Terms, please do not use our Platform.
 
-We reserve the right to update these Terms at any time. Continued use of the Platform after changes are posted constitutes acceptance of the revised Terms. We will notify you of material changes via email or a notice on the Platform.`,
+These Terms apply to all visitors, members, hosts, and guests of the Platform. Additional terms may apply to specific features (such as Humankind Stay bookings, events, or paid memberships) and are incorporated into these Terms by reference.
+
+We reserve the right to update these Terms at any time. Continued use of the Platform after changes are posted constitutes acceptance of the revised Terms. We will notify you of material changes via email, SMS (where you have opted in), or a notice on the Platform.`,
   },
   {
     title: "Eligibility & Account Registration",
@@ -30,6 +32,35 @@ By subscribing to a paid plan, you authorize us to charge your payment method on
 We reserve the right to change membership pricing with 30 days notice. Continued use of a paid membership after a price change takes effect constitutes acceptance of the new price.
 
 Event ticket purchases are generally non-refundable unless an event is cancelled by Humankind.`,
+  },
+  {
+    title: "Humankind Stay — Bookings & Hosting",
+    content: `Humankind Stay (stay.humankind.center) is a platform that connects guests with hosts offering accommodations and experiences. When you book or list a stay, you agree to the following:
+
+• Humankind acts as a booking facilitator and payment intermediary. We are not the owner, operator, or manager of any listed property, and we are not a party to the agreement between a host and a guest. Hosts are solely responsible for their listings, accommodations, and compliance with applicable laws (including local lodging, tax, and permitting requirements).
+• Payments are processed through Stripe and Stripe Connect. Guest funds are collected at the time of booking and released to the host around the time of guest check-in. A non-refundable guest service fee and payment-processing fee apply to each booking.
+• Each listing specifies a cancellation policy, which is presented to you and forms part of your booking agreement at the time of purchase. Refunds are governed by that policy. The service and processing fees are non-refundable on guest-initiated cancellations. If a host cancels a confirmed booking, the guest receives a full refund.
+• Hosts may add team members and may transfer ownership of a host account subject to our review and approval. Hosts are responsible for the actions of their team members.
+• You agree to provide accurate booking and guest information and to comply with each host's house rules. You assume the risks inherent in travel and in staying at third-party accommodations.
+
+To the fullest extent permitted by law, Humankind is not liable for the acts, omissions, conduct, or condition of any host, guest, or property, or for any injury, loss, or damage arising from a stay.`,
+  },
+  {
+    title: "SMS / Text Messaging",
+    content: `By providing your mobile phone number and opting in, you consent to receive text messages (SMS) from Humankind. We use SMS for two purposes:
+
+• Account verification and security — one-time passcodes to confirm your phone number or sign in (two-factor authentication).
+• Transactional account notifications — for example, booking confirmations, host and guest booking updates, check-in reminders, and payout alerts.
+
+Message frequency varies based on your activity. Message and data rates may apply. Consent to receive SMS is not a condition of any purchase. You may opt out at any time by replying STOP to any message; reply HELP for help, or contact us at hello@humankind.center. Carriers are not liable for delayed or undelivered messages.
+
+We do not sell your mobile information, and we do not share mobile opt-in information or consent with third parties or affiliates for their marketing or promotional purposes. See our Privacy Policy for details.`,
+  },
+  {
+    title: "Email & Electronic Communications",
+    content: `By creating an account, you agree to receive electronic communications from us, including transactional emails (such as account, billing, booking, and security notices) that are necessary to provide our services. With your consent, we also send community announcements, event reminders, and updates.
+
+You may unsubscribe from marketing and non-essential emails at any time using the unsubscribe link in those emails or by adjusting your notification preferences in your account. You may still receive transactional or service-related messages that are required to operate your account.`,
   },
   {
     title: "Acceptable Use",
@@ -70,6 +101,8 @@ Event-specific terms may apply and will be communicated at the time of ticket pu
 • Share your account credentials to allow others to access paid content
 • Use screen recording software or any other means to capture streaming content
 
+Our content is also available through connected-TV applications, including Amazon Fire TV and Apple TV. The same restrictions apply on those devices, and your use of them is subject to these Terms as well as the applicable app store and device terms.
+
 Streaming availability may be affected by geographic restrictions, technical issues, or content licensing. We do not guarantee uninterrupted access and are not liable for interruptions in streaming service.`,
   },
   {
@@ -82,7 +115,11 @@ Content on the Platform, including educational content, talks, and workshops, is
     title: "Limitation of Liability",
     content: `To the fullest extent permitted by law, Humankind and its officers, directors, employees, and agents shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or goodwill, arising from or in connection with your use of the Platform.
 
-Our total liability to you for any claims arising from these Terms or your use of the Platform shall not exceed the amount you paid to us in the 12 months preceding the claim.`,
+Our total liability to you for any claims arising from these Terms or your use of the Platform shall not exceed the greater of (a) the amount you paid to us in the 12 months preceding the claim, or (b) one hundred U.S. dollars ($100).`,
+  },
+  {
+    title: "Indemnification",
+    content: `You agree to indemnify, defend, and hold harmless Humankind and its officers, directors, employees, partners, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable attorneys' fees) arising out of or in any way connected with: (a) your access to or use of the Platform; (b) your violation of these Terms; (c) your violation of any rights of another person or entity; (d) any content you submit to the Platform; or (e) for hosts and guests, any booking, listing, stay, or dispute arising from Humankind Stay.`,
   },
   {
     title: "Termination",
@@ -91,8 +128,10 @@ Our total liability to you for any claims arising from these Terms or your use o
 Upon termination, your right to use the Platform ceases immediately. Provisions of these Terms that by their nature should survive termination will survive, including intellectual property rights, disclaimers, and limitations of liability.`,
   },
   {
-    title: "Governing Law",
-    content: `These Terms are governed by the laws of the State of Arizona, without regard to its conflict of law provisions. Any disputes arising from these Terms or your use of the Platform shall be resolved in the state or federal courts located in Yavapai County, Arizona.`,
+    title: "Governing Law & Dispute Resolution",
+    content: `These Terms are governed by the laws of the State of Arizona, without regard to its conflict of law provisions. Any disputes arising from these Terms or your use of the Platform shall be resolved in the state or federal courts located in Yavapai County, Arizona.
+
+Before filing any claim, you agree to first contact us at hello@humankind.center and attempt to resolve the dispute informally for at least thirty (30) days. Nothing in these Terms prevents either party from seeking injunctive or equitable relief to protect its intellectual property or confidential information.`,
   },
   {
     title: "Contact",
@@ -119,10 +158,10 @@ export default function TermsPage() {
             Terms of Use
           </h1>
           <p style={{ fontSize: "0.9375rem", color: "rgba(255,255,255,0.4)" }}>
-            Last updated: January 2026
+            Last updated: June 2026
           </p>
           <p style={{ fontSize: "1rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.75, marginTop: "1.25rem" }}>
-            These Terms of Use govern your access to and use of the Humankind platform and services. Please read them carefully before using our platform.
+            These Terms of Use govern your access to and use of the Humankind platform and services — the member app, marketing site, Humankind Stay, our connected-TV apps, and our email and SMS communications. Please read them carefully before using our platform.
           </p>
         </div>
 
