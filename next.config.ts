@@ -40,6 +40,17 @@ async redirects() {
         destination: "https://app.humankind.center/register",
         permanent: true,
       },
+      // Auth lives on the app subdomain — bounce these off the marketing root.
+      {
+        source: "/register",
+        destination: "https://app.humankind.center/register",
+        permanent: false,
+      },
+      {
+        source: "/login",
+        destination: "https://app.humankind.center/login",
+        permanent: false,
+      },
     ];
   },
 };
