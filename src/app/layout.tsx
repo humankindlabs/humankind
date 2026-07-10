@@ -22,6 +22,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://humankind.center"),
+  // Google Search Console domain verification — must stay in place even after
+  // verification succeeds, or the property is un-verified.
+  verification: {
+    google: "N9Sv-wjBToqWx51E_oL9PSRRHTobsvoSWiwesM4-C0w",
+  },
   title: {
     default: "humankind",
     template: "%s · humankind",
