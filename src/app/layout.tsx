@@ -8,6 +8,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import { TrackingScripts } from "@/components/tracking-scripts";
+import { UtmForwarder } from "@/components/utm-forwarder";
 import { PageViewTracker } from "@/components/analytics/page-view-tracker";
 
 const geistSans = Geist({
@@ -80,6 +81,7 @@ export default function RootLayout({
         }}
       >
         <TrackingScripts />
+        <UtmForwarder />
         <Suspense fallback={null}>
           <PageViewTracker />
         </Suspense>
