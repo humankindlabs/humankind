@@ -20,6 +20,7 @@ export function TrackingScripts() {
   const fbPixel = process.env.NEXT_PUBLIC_FB_PIXEL_ID?.trim();
   // Pixel IDs are public (they ship in page source), so a hardcoded default is safe.
   const vibePixel = (process.env.NEXT_PUBLIC_VIBE_PIXEL_ID ?? "AM4uvC").trim();
+  const oaiPixel = (process.env.NEXT_PUBLIC_OPENAI_PIXEL_ID ?? "AgvVnbBb92iZRzPVr4VYQZ").trim();
 
   return (
     <>
@@ -62,6 +63,14 @@ export function TrackingScripts() {
           !function(v,i,b,e,c,o){if(!v[c]){var s=v[c]=function(){s.process?s.process.apply(s,arguments):s.queue.push(arguments)};s.queue=[],s.b=1*new Date;var t=i.createElement(b);t.async=!0,t.src=e;var n=i.getElementsByTagName(b)[0];n.parentNode.insertBefore(t,n)}}(window,document,"script","https://s.vibe.co/vbpx.js","vbpx");
           vbpx('init', '${vibePixel}');
           vbpx('event', 'page_view');
+        `}</Script>
+      )}
+
+      {/* OpenAI (ChatGPT Ads) Pixel */}
+      {oaiPixel && (
+        <Script id="oai-pixel" strategy="afterInteractive">{`
+          !function(w,d,s,u){if(w.oaiq)return;var q=function(){q.q.push(arguments)};q.q=[];w.oaiq=q;var j=d.createElement(s);j.async=1;j.src=u;var f=d.getElementsByTagName(s)[0];f.parentNode.insertBefore(j,f)}(window,document,"script","https://bzrcdn.openai.com/sdk/oaiq.min.js");
+          oaiq("init",{pixelId:"${oaiPixel}"});
         `}</Script>
       )}
     </>
