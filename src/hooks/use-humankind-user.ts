@@ -21,7 +21,7 @@
 import { useEffect, useState } from "react";
 
 const APP_URL = "https://app.humankind.center";
-const CACHE_KEY = "hk_user_v1";
+const CACHE_KEY = "hk_user_v2";
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 export type HumankindUser = {
@@ -31,6 +31,10 @@ export type HumankindUser = {
   email: string | null;
   avatarUrl: string | null;
   username: string | null;
+  /** Profile role — gates the Admin / Check-in dropdown items. */
+  role: string | null;
+  /** Membership tier ("free" | "online" | "full" | …). */
+  tier: string | null;
 };
 
 type CacheEntry = {
