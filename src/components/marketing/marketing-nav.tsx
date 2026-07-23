@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { label: "Our Vision",         href: "/our-vision" },
   { label: "What is humankind",  href: "/what-is-humankind" },
   { label: "Connect",            href: "/connect" },
+  { label: "Book the Venue",     href: "https://venue.humankind.center/", external: true },
 ] as const;
 
 export function MarketingNav() {
@@ -63,20 +64,23 @@ export function MarketingNav() {
         }}
         className="hk-marketing-nav-links"
       >
-        {NAV_LINKS.map((l) => (
-          <Link
-            key={l.href}
-            href={l.href}
-            style={{
-              fontSize: "0.875rem",
-              color: "rgba(255,255,255,0.7)",
-              textDecoration: "none",
-              fontWeight: 500,
-            }}
-          >
-            {l.label}
-          </Link>
-        ))}
+        {NAV_LINKS.map((l) => {
+          const style = {
+            fontSize: "0.875rem",
+            color: "rgba(255,255,255,0.7)",
+            textDecoration: "none",
+            fontWeight: 500,
+          } as const;
+          return "external" in l && l.external ? (
+            <a key={l.href} href={l.href} target="_blank" rel="noopener" style={style}>
+              {l.label}
+            </a>
+          ) : (
+            <Link key={l.href} href={l.href} style={style}>
+              {l.label}
+            </Link>
+          );
+        })}
       </div>
 
       {/* Right side */}
