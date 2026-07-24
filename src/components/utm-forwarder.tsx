@@ -6,9 +6,11 @@ const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_c
 
 /**
  * Marketing site → app attribution bridge. localStorage doesn't cross domains,
- * so we stash first-touch UTMs here and append them to any outbound
- * app.humankind.center link the visitor clicks. The app then persists them
- * onto the account at signup.
+ * so we stash first-touch UTMs AND the original external referrer (Google,
+ * Facebook, …) here and append them to any outbound app.humankind.center link
+ * the visitor clicks (referrer travels as ?hk_ref=). The app then persists
+ * them onto the account at signup — so a member who found humankind.center
+ * via a Google search shows as Google search, not "ref: humankind.center".
  */
 export function UtmForwarder() {
   useEffect(() => {
@@ -18,6 +20,10 @@ export function UtmForwarder() {
       for (const k of UTM_KEYS) {
         const v = params.get(k);
         if (v) found[k] = v.slice(0, 120);
+      }
+      const ref = document.referrer;
+      if (ref && !ref.includes(window.location.hostname)) {
+        found.hk_ref = ref.slice(0, 300);
       }
       if (Object.keys(found).length && !window.sessionStorage.getItem(KEY)) {
         window.sessionStorage.setItem(KEY, JSON.stringify(found));
