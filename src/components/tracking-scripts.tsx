@@ -16,7 +16,9 @@ import Script from "next/script";
 
 export function TrackingScripts() {
   const ga4 = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID?.trim();
-  const gAds = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID?.trim();
+  // Google Ads tag builds the remarketing audience — the marketing site's
+  // ~1000 sessions/28d were invisible to it while only the app carried the tag.
+  const gAds = (process.env.NEXT_PUBLIC_GOOGLE_ADS_ID ?? "AW-16968152246").trim();
   const fbPixel = process.env.NEXT_PUBLIC_FB_PIXEL_ID?.trim();
   // Pixel IDs are public (they ship in page source), so a hardcoded default is safe.
   const vibePixel = (process.env.NEXT_PUBLIC_VIBE_PIXEL_ID ?? "AM4uvC").trim();
