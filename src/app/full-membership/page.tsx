@@ -208,7 +208,7 @@ export default function FullMembershipPage() {
                 { type: "youtube", id: "mOHOhxGd5uM", thumb: "https://i.ytimg.com/vi/mOHOhxGd5uM/hqdefault.jpg", label: "humankind on YouTube", wide: true },
                 { type: "image", src: `${L2}/laura-eisenhower.jpg`, label: "Laura Eisenhower" },
                 { type: "image", src: `${L2}/polish-ambassador.jpg`, label: "The Polish Ambassador" },
-                { type: "image", src: `${L2}/video-wall.jpg`, label: "The video wall" },
+                { type: "image", src: `${L2}/sheela-rahman.jpg`, label: "Sheela Rahman" },
                 { type: "image", src: `${L2}/scorpio-dance-party.jpg`, label: "Scorpio dance party" },
                 { type: "video", src: MONTAGE, label: "Event montage", wide: true },
                 { type: "image", src: `${L2}/humankind_long.jpg`, label: "humankind", wide: true },
