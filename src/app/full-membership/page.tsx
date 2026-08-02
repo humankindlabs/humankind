@@ -84,19 +84,19 @@ export default function FullMembershipPage() {
           <video
             autoPlay muted loop playsInline preload="metadata"
             src={MONTAGE}
-            style={{ display: "block", width: "100%", height: "100%", aspectRatio: "1280/420", objectFit: "cover" }}
+            style={{ display: "block", width: "100%", height: "100%", aspectRatio: "1280/310", objectFit: "cover" }}
           />
           <svg
-            viewBox="0 0 1280 420"
+            viewBox="0 0 1280 310"
             preserveAspectRatio="none"
             aria-hidden="true"
             style={{ position: "absolute", inset: "-1px", width: "calc(100% + 2px)", height: "calc(100% + 2px)" }}
           >
             <defs>
               <mask id="hk-knockout">
-                <rect x="-20" y="-20" width="1320" height="460" fill="#fff" />
+                <rect x="-20" y="-20" width="1320" height="350" fill="#fff" />
                 <text
-                  x="640" y="210"
+                  x="640" y="155"
                   textAnchor="middle"
                   dominantBaseline="central"
                   textLength="1280"
@@ -108,15 +108,15 @@ export default function FullMembershipPage() {
                 </text>
               </mask>
             </defs>
-            <rect x="-20" y="-20" width="1320" height="460" fill="#00031C" mask="url(#hk-knockout)" />
+            <rect x="-20" y="-20" width="1320" height="350" fill="#00031C" mask="url(#hk-knockout)" />
           </svg>
           <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>humankind</span>
         </div>
 
       </section>
 
-      {/* ── Mission: text left, staggered 4-image grid right (template hero) ── */}
-      <section style={{ padding: "3.5rem 1.5rem" }}>
+      {/* ── Mission: image grid left, text right (template hero) ── */}
+      <section style={{ padding: "1.5rem 1.5rem 3.5rem" }}>
         <div className="hk-fm-hero" style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0, 5fr) minmax(0, 7fr)", gap: "3rem", alignItems: "center" }}>
           <Reveal direction="right">
             <div style={{ display: "flex", gap: "1.5rem", justifyContent: "flex-start" }}>
