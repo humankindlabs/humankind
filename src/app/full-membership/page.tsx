@@ -58,22 +58,49 @@ export default function FullMembershipPage() {
     <div style={{ background: "#00031C", color: "#fff", minHeight: "100dvh", overflowX: "hidden" }}>
       <MarketingNav />
 
-      {/* ── Hero ── */}
-      <section style={{ padding: "5.5rem 1.5rem 4rem", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute", top: "40%", left: "50%", transform: "translate(-50%, -50%)",
-            width: "900px", height: "900px", borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(12,176,1,0.08) 0%, transparent 70%)",
-            pointerEvents: "none",
-          }}
-        />
-        <div style={{ position: "relative", maxWidth: "780px", margin: "0 auto" }}>
-          <p style={{ fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: "#0CB001" }}>
-            Full Membership
-          </p>
-          <h1 style={{ ...heading, fontSize: "clamp(2.1rem, 5vw, 3.4rem)", marginTop: "0.9rem" }}>
+      {/* ── Hero: knockout wordmark — a montage of real humankind events
+             (concert, sound bath, podcast, show intro, gathering) plays
+             INSIDE the letters. Inline SVG mask so the page font applies. ── */}
+      <section style={{ padding: "3.5rem 1.5rem 4rem", textAlign: "center" }}>
+        <p style={{ fontSize: "0.78rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", color: "#0CB001" }}>
+          Full Membership
+        </p>
+
+        <div style={{ position: "relative", maxWidth: "1100px", margin: "1.5rem auto 0", overflow: "hidden", borderRadius: "18px" }}>
+          <video
+            autoPlay muted loop playsInline preload="metadata"
+            src="https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/hero-montage.mp4"
+            style={{ display: "block", width: "100%", aspectRatio: "1280/548", objectFit: "cover" }}
+          />
+          <svg
+            viewBox="0 0 1280 548"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+          >
+            <defs>
+              <mask id="hk-knockout">
+                <rect width="1280" height="548" fill="#fff" />
+                <text
+                  x="640" y="274"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  textLength="1150"
+                  lengthAdjust="spacingAndGlyphs"
+                  fill="#000"
+                  style={{ fontFamily: "var(--font-geist-sans, system-ui, sans-serif)", fontWeight: 800, fontSize: "252px", letterSpacing: "-0.04em" }}
+                >
+                  humankind
+                </text>
+              </mask>
+            </defs>
+            <rect width="1280" height="548" fill="#00031C" mask="url(#hk-knockout)" />
+          </svg>
+          <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>humankind</span>
+        </div>
+
+        <div style={{ maxWidth: "780px", margin: "0 auto" }}>
+          <h1 style={{ ...heading, fontSize: "clamp(1.6rem, 3.6vw, 2.5rem)", marginTop: "2rem" }}>
             A community for raising human consciousness
           </h1>
           <p style={{ ...body, fontSize: "1.15rem", maxWidth: "640px", margin: "1.25rem auto 0" }}>
