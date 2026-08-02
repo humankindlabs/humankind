@@ -46,11 +46,13 @@ export function MarketingNav() {
       <Link
         href="/"
         style={{
-          fontSize: "1.0625rem",
+          // same size/weight as the app's header wordmark
+          fontSize: "1.4625rem",
           fontWeight: 700,
           textDecoration: "none",
           letterSpacing: "-0.01em",
           color: "#fff",
+          lineHeight: 1,
         }}
       >
         humankind
