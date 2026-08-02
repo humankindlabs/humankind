@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { MarketingNav } from "@/components/marketing/marketing-nav";
 import { HomepageFooter } from "@/components/homepage/HomepageFooter";
 import { Reveal } from "@/components/marketing/reveal";
+import { ShowcaseGallery } from "@/components/marketing/showcase-gallery";
 
 const APP_URL = "https://app.humankind.center";
 const MONTAGE = "https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/hero-montage.mp4";
@@ -118,7 +119,7 @@ export default function FullMembershipPage() {
           <div style={{ maxWidth: "1200px", margin: "1.75rem auto 0", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: "16px", padding: "1.5rem 1.75rem", textAlign: "left" }}>
             <div className="hk-actionbox" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.5rem" }}>
               <div style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
-                {["green", "purple", "orange", "blue"].map((c, i) => (
+                {["green", "purple", "orange"].map((c, i) => (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img key={c} src={`/avatars/avatar_${c}.png`} alt="" width={44} height={44}
                        style={{ borderRadius: "50%", border: "2px solid #00031C", marginLeft: i === 0 ? 0 : "-12px", background: "#fff", position: "relative", zIndex: i }} />
@@ -199,41 +200,32 @@ export default function FullMembershipPage() {
               </div>
               <a href={`${APP_URL}/media`} style={{ ...ghostBtn, padding: "0.6rem 1.4rem", fontSize: "0.9rem" }}>Watch the network →</a>
             </div>
-            <div className="hk-fm-showcase" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0.6rem", borderRadius: "16px", overflow: "hidden" }}>
-              <video autoPlay muted loop playsInline preload="metadata" src={MONTAGE}
-                     className="hk-fm-shot" style={{ width: "100%", height: "210px", objectFit: "cover", display: "block", gridColumn: "span 2" }} />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={IMG_UPVIBE} alt="The Up Vibe podcast" loading="lazy" className="hk-fm-shot" style={{ width: "100%", height: "210px", objectFit: "cover", display: "block" }} />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={IMG_HOPE} alt="HOPE with TEETH live" loading="lazy" className="hk-fm-shot" style={{ width: "100%", height: "210px", objectFit: "cover", display: "block" }} />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={IMG_GRAND} alt="Grand Rising gathering" loading="lazy" className="hk-fm-shot" style={{ width: "100%", height: "210px", objectFit: "cover", display: "block" }} />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={IMG_ELEVATE} alt="Dance night" loading="lazy" className="hk-fm-shot" style={{ width: "100%", height: "210px", objectFit: "cover", display: "block" }} />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={IMG_SOUNDBATH} alt="Sound healing" loading="lazy" className="hk-fm-shot" style={{ width: "100%", height: "210px", objectFit: "cover", display: "block", gridColumn: "span 2" }} />
-            </div>
+            <ShowcaseGallery
+              items={[
+                { type: "youtube", id: "mOHOhxGd5uM", thumb: "https://i.ytimg.com/vi/mOHOhxGd5uM/hqdefault.jpg", label: "humankind on YouTube" },
+                { type: "video", src: MONTAGE, label: "Event montage" },
+                { type: "image", src: IMG_UPVIBE, label: "The Up Vibe podcast" },
+                { type: "image", src: IMG_HOPE, label: "HOPE with TEETH live" },
+                { type: "image", src: IMG_GRAND, label: "Grand Rising gathering" },
+                { type: "image", src: IMG_ELEVATE, label: "Dance night" },
+                { type: "image", src: IMG_SOUNDBATH, label: "Sound healing" },
+              ]}
+            />
           </Reveal>
         </div>
       </section>
 
-      {/* ── What happens here ── */}
+      {/* ── What happens here — two-column list (title left, rows right,
+             image placeholder right-justified per row) ── */}
       <section id="whats-here" style={{ padding: "3.5rem 1.5rem", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          <Reveal direction="up">
-            <h2 style={{ ...heading, textAlign: "center" }}>What happens at humankind</h2>
-            <p style={{ ...body, textAlign: "center", maxWidth: "640px", margin: "1rem auto 0" }}>
+        <div className="hk-whats-grid" style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(200px, 300px) minmax(0, 1fr)", gap: "3rem", alignItems: "start" }}>
+          <div className="hk-whats-title" style={{ position: "sticky", top: "90px" }}>
+            <h2 style={heading}>What happens at humankind</h2>
+            <p style={{ ...body, fontSize: "0.95rem" }}>
               The calendar never sits still — and Full members walk into all of it.
             </p>
-          </Reveal>
-          <div
-            style={{
-              marginTop: "2.5rem",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-              gap: "1.1rem",
-            }}
-          >
+          </div>
+          <div>
             {[
               ["🎤", "Conferences", "Transformational gatherings with leading voices in consciousness — multi-day events you'll think about for years."],
               ["💃", "Dance events", "Ecstatic dance and conscious dance nights — Sedona's best floor for moving energy, all ages welcome."],
@@ -242,19 +234,16 @@ export default function FullMembershipPage() {
               ["😂", "Comedy events", "Conscious community laughs hard too — live comedy nights on our stage."],
               ["⭐", "National acts", "National touring acts have played this room — and we're always booking new ones."],
             ].map(([icon, title, text], i) => (
-              <Reveal key={title as string} direction="up" delay={i * 90}>
-                <div
-                  style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    borderRadius: "16px",
-                    padding: "1.5rem 1.4rem",
-                    height: "100%",
-                  }}
-                >
-                  <div style={{ fontSize: "1.7rem" }}>{icon}</div>
-                  <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#fff", margin: "0.7rem 0 0" }}>{title}</h3>
-                  <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", lineHeight: 1.65, color: "rgba(255,255,255,0.62)" }}>{text}</p>
+              <Reveal key={title as string} direction="up" delay={i * 60}>
+                <div style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start", justifyContent: "space-between", padding: "1.4rem 0", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                  <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff", margin: 0 }}>{title}</h3>
+                    <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", lineHeight: 1.65, color: "rgba(255,255,255,0.62)", maxWidth: "58ch" }}>{text}</p>
+                  </div>
+                  {/* image placeholder — swap for real photos later */}
+                  <div className="hk-whats-thumb" style={{ width: "160px", aspectRatio: "16/10", borderRadius: "10px", background: "rgba(255,255,255,0.05)", border: "1px dashed rgba(255,255,255,0.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.8rem", flexShrink: 0, marginLeft: "auto" }}>
+                    {icon}
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -362,6 +351,11 @@ export default function FullMembershipPage() {
         @media (max-width: 900px) {
           .hk-fm-hero { grid-template-columns: 1fr !important; }
           .hk-fm-showcase { grid-template-columns: repeat(2, 1fr) !important; }
+          .hk-whats-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
+          .hk-whats-title { position: static !important; }
+        }
+        @media (max-width: 560px) {
+          .hk-whats-thumb { width: 104px !important; }
         }
       `}</style>
 
