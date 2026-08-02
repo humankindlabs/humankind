@@ -119,14 +119,14 @@ export default function FullMembershipPage() {
       <section style={{ padding: "3.5rem 1.5rem" }}>
         <div className="hk-fm-hero" style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0, 5fr) minmax(0, 7fr)", gap: "3rem", alignItems: "center" }}>
           <Reveal direction="right">
-            <div style={{ display: "flex", gap: "1.1rem", justifyContent: "flex-start" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem", paddingTop: "2.5rem" }}>
+            <div style={{ display: "flex", gap: "1.5rem", justifyContent: "flex-start" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", paddingTop: "2.5rem" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={IMG_SOUNDBATH} alt="Sound bath at humankind" loading="lazy" style={gridImg} />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={IMG_HARP} alt="Immersive harp rave" loading="lazy" style={gridImg} />
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem", paddingBottom: "2.5rem" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", paddingBottom: "2.5rem" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={IMG_ELEVATE} alt="ELEVATE dance night" loading="lazy" style={gridImg} />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
