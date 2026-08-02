@@ -9,7 +9,8 @@ import { Reveal } from "@/components/marketing/reveal";
 import { ShowcaseGallery } from "@/components/marketing/showcase-gallery";
 
 const APP_URL = "https://app.humankind.center";
-const MONTAGE = "https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/hero-montage.mp4";
+const MONTAGE = "https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/hero-montage-v2.mp4";
+const LANDING_IMG = "https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/landing";
 
 // Real event art (our own Vimeo thumbnails)
 const IMG_SOUNDBATH = "https://i.vimeocdn.com/video/2176040177-39c36fc9ec29281c073f0e9f10f6d31803cdc0388bdec5df36f1334d2ca261a4-d_1920x1080?&r=pad&region=us";
@@ -227,23 +228,23 @@ export default function FullMembershipPage() {
           </div>
           <div>
             {[
-              ["🎤", "Conferences", "Transformational gatherings with leading voices in consciousness — multi-day events you'll think about for years."],
-              ["💃", "Dance events", "Ecstatic dance and conscious dance nights — Sedona's best floor for moving energy, all ages welcome."],
-              ["🎶", "Sound baths", "Immersive sound healing sessions that reset the nervous system and open the room."],
-              ["🛠️", "Workshops", "Breathwork, meditation, healing modalities, and hands-on practice with skilled facilitators."],
-              ["😂", "Comedy events", "Conscious community laughs hard too — live comedy nights on our stage."],
-              ["⭐", "National acts", "National touring acts have played this room — and we're always booking new ones."],
-            ].map(([icon, title, text], i) => (
+              ["conferences", "Conferences", "Transformational gatherings with leading voices in consciousness — multi-day events you'll think about for years."],
+              ["dance", "Dance events", "Ecstatic dance and conscious dance nights — Sedona's best floor for moving energy, all ages welcome."],
+              ["soundbaths", "Sound baths", "Immersive sound healing sessions that reset the nervous system and open the room."],
+              ["workshops", "Workshops", "Breathwork, meditation, healing modalities, and hands-on practice with skilled facilitators."],
+              ["comedy", "Comedy events", "Conscious community laughs hard too — live comedy nights on our stage."],
+              ["nationalacts", "National acts", "National touring acts have played this room — and we're always booking new ones."],
+            ].map(([img, title, text], i) => (
               <Reveal key={title as string} direction="up" delay={i * 60}>
                 <div style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start", justifyContent: "space-between", padding: "1.4rem 0", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
                   <div style={{ flex: "1 1 auto", minWidth: 0 }}>
                     <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#fff", margin: 0 }}>{title}</h3>
                     <p style={{ marginTop: "0.5rem", fontSize: "0.92rem", lineHeight: 1.65, color: "rgba(255,255,255,0.62)", maxWidth: "58ch" }}>{text}</p>
                   </div>
-                  {/* image placeholder — swap for real photos later */}
-                  <div className="hk-whats-thumb" style={{ width: "160px", aspectRatio: "16/10", borderRadius: "10px", background: "rgba(255,255,255,0.05)", border: "1px dashed rgba(255,255,255,0.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.8rem", flexShrink: 0, marginLeft: "auto" }}>
-                    {icon}
-                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`${LANDING_IMG}/${img}.jpg`} alt={title as string} loading="lazy"
+                       className="hk-whats-thumb"
+                       style={{ width: "160px", aspectRatio: "16/10", objectFit: "cover", borderRadius: "10px", flexShrink: 0, marginLeft: "auto" }} />
                 </div>
               </Reveal>
             ))}
