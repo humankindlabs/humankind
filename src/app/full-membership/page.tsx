@@ -65,8 +65,9 @@ const ghostBtn: React.CSSProperties = {
 };
 
 const gridImg: React.CSSProperties = {
-  width: "100%",
-  height: "230px",
+  width: "233px",
+  maxWidth: "100%",
+  height: "278px",
   objectFit: "cover",
   borderRadius: "14px",
   display: "block",
@@ -112,19 +113,29 @@ export default function FullMembershipPage() {
           <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>humankind</span>
         </div>
 
-        {/* badge under the wordmark (template's community pill) */}
-        <Reveal direction="up">
-          <span style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", marginTop: "1.5rem", padding: "0.5rem 1.1rem", borderRadius: "99px", background: "rgba(12,176,1,0.15)", border: "1px solid rgba(12,176,1,0.35)", color: "#0CB001", fontSize: "0.9rem", fontWeight: 700 }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#0CB001", display: "inline-block" }} />
-            Join our conscious community
-          </span>
-        </Reveal>
       </section>
 
       {/* ── Mission: text left, staggered 4-image grid right (template hero) ── */}
       <section style={{ padding: "3.5rem 1.5rem" }}>
-        <div className="hk-fm-hero" style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0, 7fr) minmax(0, 5fr)", gap: "3rem", alignItems: "center" }}>
+        <div className="hk-fm-hero" style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0, 5fr) minmax(0, 7fr)", gap: "3rem", alignItems: "center" }}>
           <Reveal direction="right">
+            <div style={{ display: "flex", gap: "1.1rem", justifyContent: "flex-start" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem", paddingTop: "2.5rem" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={IMG_SOUNDBATH} alt="Sound bath at humankind" loading="lazy" style={gridImg} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={IMG_HARP} alt="Immersive harp rave" loading="lazy" style={gridImg} />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem", paddingBottom: "2.5rem" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={IMG_ELEVATE} alt="ELEVATE dance night" loading="lazy" style={gridImg} />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={IMG_COSMIC} alt="Cosmic-Kind live show" loading="lazy" style={gridImg} />
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal direction="left">
             <h1 style={{ ...heading, fontSize: "clamp(2rem, 4.4vw, 3.2rem)" }}>
               A community for <span style={{ background: "linear-gradient(90deg, #0CB001, #7fe07a)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>raising human consciousness</span>
             </h1>
@@ -141,23 +152,6 @@ export default function FullMembershipPage() {
             <div style={{ marginTop: "1.75rem", display: "flex", gap: "0.9rem", flexWrap: "wrap" }}>
               <a href={`${APP_URL}/memberships`} style={ctaBtn}>Become a Full Member</a>
               <a href="#access" style={ghostBtn}>Choose your access ↓</a>
-            </div>
-          </Reveal>
-
-          <Reveal direction="left">
-            <div style={{ display: "flex", gap: "1.1rem" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem", width: "100%", paddingTop: "2.5rem" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={IMG_SOUNDBATH} alt="Sound bath at humankind" loading="lazy" style={gridImg} />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={IMG_HARP} alt="Immersive harp rave" loading="lazy" style={gridImg} />
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.1rem", width: "100%", paddingBottom: "2.5rem" }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={IMG_ELEVATE} alt="ELEVATE dance night" loading="lazy" style={gridImg} />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={IMG_COSMIC} alt="Cosmic-Kind live show" loading="lazy" style={gridImg} />
-              </div>
             </div>
           </Reveal>
         </div>
