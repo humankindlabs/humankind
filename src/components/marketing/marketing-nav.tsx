@@ -46,9 +46,10 @@ export function MarketingNav() {
       <Link
         href="/"
         style={{
-          // same size/weight as the app's header wordmark
+          // brand wordmark: Mont Heavy, app-logo size
+          fontFamily: "'Mont', system-ui, sans-serif",
           fontSize: "1.4625rem",
-          fontWeight: 700,
+          fontWeight: 900,
           textDecoration: "none",
           letterSpacing: "-0.01em",
           color: "#fff",
