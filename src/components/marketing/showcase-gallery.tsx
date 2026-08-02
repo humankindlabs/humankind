@@ -4,6 +4,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 export type GalleryItem = (
   | { type: "youtube"; id: string; thumb: string; label?: string }
@@ -45,6 +46,8 @@ export function ShowcaseGallery({ items }: { items: GalleryItem[] }) {
   }
 
   const current = openIdx !== null ? items[openIdx] : null;
+  // position:fixed is trapped by any transformed ancestor (the Reveal fly-in
+  // wrapper) — portal the overlay to <body> so it truly covers the window.
 
   return (
     <>
@@ -68,10 +71,10 @@ export function ShowcaseGallery({ items }: { items: GalleryItem[] }) {
         ))}
       </div>
 
-      {current && (
+      {current && typeof document !== "undefined" && createPortal(
         <div role="dialog" aria-modal="true" aria-label="Media viewer"
              onClick={(e) => { if (e.target === e.currentTarget) setOpenIdx(null); }}
-             style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(0,3,28,0.92)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem" }}>
+             style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(0,3,28,0.92)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
           <button type="button" aria-label="Close" onClick={() => setOpenIdx(null)}
                   style={{ position: "absolute", top: "1.25rem", right: "1.5rem", background: "none", border: "none", color: "rgba(255,255,255,0.7)", fontSize: "1.8rem", cursor: "pointer", lineHeight: 1, zIndex: 2 }}>✕</button>
           <button type="button" aria-label="Previous" onClick={() => step(-1)}
@@ -98,7 +101,8 @@ export function ShowcaseGallery({ items }: { items: GalleryItem[] }) {
                    style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "12px" }} />
             )}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
