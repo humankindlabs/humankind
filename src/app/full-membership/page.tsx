@@ -86,10 +86,10 @@ export default function FullMembershipPage() {
                   x="640" y="210"
                   textAnchor="middle"
                   dominantBaseline="central"
-                  textLength="1180"
+                  textLength="1280"
                   lengthAdjust="spacing"
                   fill="#000"
-                  style={{ fontFamily: "var(--font-geist-sans, system-ui, sans-serif)", fontWeight: 800, fontSize: "258px", letterSpacing: "-0.02em" }}
+                  style={{ fontFamily: "var(--font-geist-sans, system-ui, sans-serif)", fontWeight: 800, fontSize: "272px", letterSpacing: "-0.02em" }}
                 >
                   humankind
                 </text>
