@@ -66,35 +66,36 @@ export default function FullMembershipPage() {
           Full Membership
         </p>
 
-        <div style={{ position: "relative", maxWidth: "1100px", margin: "1.5rem auto 0", overflow: "hidden", borderRadius: "18px" }}>
+        <div style={{ position: "relative", maxWidth: "1200px", margin: "1.5rem auto 0", overflow: "hidden" }}>
           <video
             autoPlay muted loop playsInline preload="metadata"
             src="https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/hero-montage.mp4"
-            style={{ display: "block", width: "100%", aspectRatio: "1280/548", objectFit: "cover" }}
+            style={{ display: "block", width: "100%", height: "100%", aspectRatio: "1280/420", objectFit: "cover" }}
           />
           <svg
-            viewBox="0 0 1280 548"
+            viewBox="0 0 1280 420"
             preserveAspectRatio="none"
             aria-hidden="true"
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+            style={{ position: "absolute", inset: "-1px", width: "calc(100% + 2px)", height: "calc(100% + 2px)" }}
           >
             <defs>
               <mask id="hk-knockout">
-                <rect width="1280" height="548" fill="#fff" />
+                {/* overdraw past the viewBox so no video hairline survives at the edges */}
+                <rect x="-20" y="-20" width="1320" height="460" fill="#fff" />
                 <text
-                  x="640" y="274"
+                  x="640" y="210"
                   textAnchor="middle"
                   dominantBaseline="central"
-                  textLength="1150"
-                  lengthAdjust="spacingAndGlyphs"
+                  textLength="1180"
+                  lengthAdjust="spacing"
                   fill="#000"
-                  style={{ fontFamily: "var(--font-geist-sans, system-ui, sans-serif)", fontWeight: 800, fontSize: "252px", letterSpacing: "-0.04em" }}
+                  style={{ fontFamily: "var(--font-geist-sans, system-ui, sans-serif)", fontWeight: 800, fontSize: "258px", letterSpacing: "-0.02em" }}
                 >
                   humankind
                 </text>
               </mask>
             </defs>
-            <rect width="1280" height="548" fill="#00031C" mask="url(#hk-knockout)" />
+            <rect x="-20" y="-20" width="1320" height="460" fill="#00031C" mask="url(#hk-knockout)" />
           </svg>
           <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>humankind</span>
         </div>
