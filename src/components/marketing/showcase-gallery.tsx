@@ -5,10 +5,11 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-export type GalleryItem =
+export type GalleryItem = (
   | { type: "youtube"; id: string; thumb: string; label?: string }
   | { type: "video"; src: string; thumb?: string; label?: string }
-  | { type: "image"; src: string; label?: string };
+  | { type: "image"; src: string; label?: string }
+) & { wide?: boolean };
 
 export function ShowcaseGallery({ items }: { items: GalleryItem[] }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
@@ -51,7 +52,7 @@ export function ShowcaseGallery({ items }: { items: GalleryItem[] }) {
         {items.map((item, i) => (
           <button key={i} type="button" onClick={() => setOpenIdx(i)}
                   aria-label={item.label ?? "Open media"}
-                  style={{ position: "relative", padding: 0, border: "none", background: "none", gridColumn: i === 0 || i === items.length - 1 ? "span 2" : undefined }}>
+                  style={{ position: "relative", padding: 0, border: "none", background: "none", gridColumn: item.wide ? "span 2" : undefined }}>
             {item.type === "video" && !item.thumb ? (
               <video autoPlay muted loop playsInline preload="metadata" src={item.src} style={tileStyle} />
             ) : (

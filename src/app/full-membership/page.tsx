@@ -201,15 +201,18 @@ export default function FullMembershipPage() {
               </div>
               <a href={`${APP_URL}/media`} style={{ ...ghostBtn, padding: "0.6rem 1.4rem", fontSize: "0.9rem" }}>Watch the network →</a>
             </div>
+            {/* 3-row pattern: long-img-img / img-img-long / long-img-img */}
             <ShowcaseGallery
               items={[
-                { type: "youtube", id: "mOHOhxGd5uM", thumb: "https://i.ytimg.com/vi/mOHOhxGd5uM/hqdefault.jpg", label: "humankind on YouTube" },
-                { type: "video", src: MONTAGE, label: "Event montage" },
+                { type: "youtube", id: "mOHOhxGd5uM", thumb: "https://i.ytimg.com/vi/mOHOhxGd5uM/hqdefault.jpg", label: "humankind on YouTube", wide: true },
                 { type: "image", src: IMG_UPVIBE, label: "The Up Vibe podcast" },
                 { type: "image", src: IMG_HOPE, label: "HOPE with TEETH live" },
                 { type: "image", src: IMG_GRAND, label: "Grand Rising gathering" },
+                { type: "image", src: IMG_HARP, label: "Immersive harp rave" },
+                { type: "video", src: MONTAGE, label: "Event montage", wide: true },
+                { type: "image", src: IMG_SOUNDBATH, label: "Sound healing", wide: true },
                 { type: "image", src: IMG_ELEVATE, label: "Dance night" },
-                { type: "image", src: IMG_SOUNDBATH, label: "Sound healing" },
+                { type: "image", src: IMG_COSMIC, label: "Cosmic-Kind live" },
               ]}
             />
           </Reveal>
