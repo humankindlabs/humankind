@@ -286,8 +286,26 @@ export default function FullMembershipPage() {
               Two ways in — in the room, or on every screen you own.
             </p>
           </Reveal>
-          <div style={{ marginTop: "2.25rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.25rem", alignItems: "stretch" }}>
-            <Reveal direction="right">
+          <div className="hk-price-grid" style={{ marginTop: "2.25rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.25rem", alignItems: "stretch" }}>
+            {/* Online first on desktop; on mobile the FULL card jumps first
+                (CSS order) so scrollers see the strongest option up top. */}
+            <Reveal direction="right"><div className="hk-price-full" style={{ height: "100%" }}>
+              <div style={{ border: "1px solid rgba(12,176,1,0.5)", background: "rgba(12,176,1,0.06)", borderRadius: "20px", padding: "2rem 1.75rem", height: "100%", display: "flex", flexDirection: "column", position: "relative" }}>
+                <span style={{ position: "absolute", top: "-0.8rem", right: "1.5rem", background: "#0CB001", color: "#fff", fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", padding: "0.3rem 0.9rem", borderRadius: "99px" }}>Most complete</span>
+                <p style={{ margin: 0, fontSize: "0.8rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#0CB001" }}>Full</p>
+                <p style={{ margin: "0.75rem 0 0", fontSize: "2.4rem", fontWeight: 800, color: "#fff" }}>$77<span style={{ fontSize: "1rem", fontWeight: 600, color: "rgba(255,255,255,0.5)" }}> / month</span></p>
+                <ul style={{ margin: "1.25rem 0 0", padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "0.95rem", color: "rgba(255,255,255,0.85)" }}>
+                  <li>✓ Every humankind in-person event</li>
+                  <li>✓ Conferences, dance nights, sound baths, comedy, national acts</li>
+                  <li>✓ Everything in Online included</li>
+                  <li>✓ A voice in community governance</li>
+                </ul>
+                <div style={{ marginTop: "auto", paddingTop: "1.25rem" }}>
+                  <a href={`${APP_URL}/memberships`} style={{ ...ctaBtn, display: "block", textAlign: "center" }}>Become a Full Member</a>
+                </div>
+              </div>
+            </div></Reveal>
+            <Reveal direction="left"><div className="hk-price-online" style={{ height: "100%" }}>
               <div style={{ border: "1px solid rgba(255,255,255,0.12)", borderRadius: "20px", padding: "2rem 1.75rem", height: "100%", display: "flex", flexDirection: "column" }}>
                 <p style={{ margin: 0, fontSize: "0.8rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.5)" }}>Online</p>
                 <p style={{ margin: "0.75rem 0 0", fontSize: "2.4rem", fontWeight: 800, color: "#fff" }}>$11<span style={{ fontSize: "1rem", fontWeight: 600, color: "rgba(255,255,255,0.5)" }}> / month</span></p>
@@ -304,23 +322,7 @@ export default function FullMembershipPage() {
                   <a href={`${APP_URL}/memberships`} style={{ ...ghostBtn, display: "block", textAlign: "center" }}>Become an Online Member</a>
                 </div>
               </div>
-            </Reveal>
-            <Reveal direction="left">
-              <div style={{ border: "1px solid rgba(12,176,1,0.5)", background: "rgba(12,176,1,0.06)", borderRadius: "20px", padding: "2rem 1.75rem", height: "100%", display: "flex", flexDirection: "column", position: "relative" }}>
-                <span style={{ position: "absolute", top: "-0.8rem", right: "1.5rem", background: "#0CB001", color: "#fff", fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", padding: "0.3rem 0.9rem", borderRadius: "99px" }}>Most complete</span>
-                <p style={{ margin: 0, fontSize: "0.8rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.1em", color: "#0CB001" }}>Full</p>
-                <p style={{ margin: "0.75rem 0 0", fontSize: "2.4rem", fontWeight: 800, color: "#fff" }}>$77<span style={{ fontSize: "1rem", fontWeight: 600, color: "rgba(255,255,255,0.5)" }}> / month</span></p>
-                <ul style={{ margin: "1.25rem 0 0", padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: "0.6rem", fontSize: "0.95rem", color: "rgba(255,255,255,0.85)" }}>
-                  <li>✓ Every humankind in-person event</li>
-                  <li>✓ Conferences, dance nights, sound baths, comedy, national acts</li>
-                  <li>✓ Everything in Online included</li>
-                  <li>✓ A voice in community governance</li>
-                </ul>
-                <div style={{ marginTop: "auto", paddingTop: "1.25rem" }}>
-                  <a href={`${APP_URL}/memberships`} style={{ ...ctaBtn, display: "block", textAlign: "center" }}>Become a Full Member</a>
-                </div>
-              </div>
-            </Reveal>
+            </div></Reveal>
           </div>
         </div>
       </section>
@@ -356,6 +358,11 @@ export default function FullMembershipPage() {
         }
         @media (max-width: 560px) {
           .hk-whats-thumb { width: 104px !important; }
+        }
+        /* pricing order: DOM puts FULL first (mobile stacking shows it on
+           top); on desktop the ONLINE card moves back to the left column. */
+        @media (min-width: 681px) {
+          .hk-price-grid > div:has(.hk-price-online) { order: -1; }
         }
       `}</style>
 
