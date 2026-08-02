@@ -2,8 +2,8 @@
 import Link from "next/link";
 
 const STATS = [
-  { num: "100+",    label: "Community Members",  desc: "and growing" },
-  { num: "150+",    label: "Events Per Year",     desc: "in Sedona & online" },
+  { num: "500+",    label: "Community Members",  desc: "and growing" },
+  { num: "200+",    label: "Events Per Year",     desc: "in Sedona & online" },
   { num: "Weekly", label: "Live Streams",        desc: "every Friday" },
   { num: "4",      label: "Event Types",         desc: "conferences, workshops, music & more" },
 ];

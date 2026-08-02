@@ -68,8 +68,8 @@ export function HeroC() {
         {/* Stats — real numbers */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "2.5rem", marginTop: "3.5rem", flexWrap: "wrap" }}>
           {[
-            { num: "50+",    label: "Community Members" },
-            { num: "50+",    label: "Events / Year" },
+            { num: "500+",    label: "Community Members" },
+            { num: "200+",    label: "Events / Year" },
             { num: "Weekly", label: "Live Streams" },
           ].map((s) => (
             <div key={s.label} style={{ textAlign: "center" }}>
