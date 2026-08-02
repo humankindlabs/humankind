@@ -113,6 +113,37 @@ export default function FullMembershipPage() {
           <span style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>humankind</span>
         </div>
 
+        {/* ── Action box (template's community CTA), directly under the hero ── */}
+        <Reveal direction="zoom">
+          <div style={{ maxWidth: "1200px", margin: "1.75rem auto 0", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)", borderRadius: "16px", padding: "1.5rem 1.75rem", textAlign: "left" }}>
+            <div className="hk-actionbox" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "1.5rem" }}>
+              <div style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
+                {["green", "purple", "orange", "blue"].map((c, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={c} src={`/avatars/avatar_${c}.png`} alt="" width={44} height={44}
+                       style={{ borderRadius: "50%", border: "2px solid #00031C", marginLeft: i === 0 ? 0 : "-12px", background: "#fff", position: "relative", zIndex: i }} />
+                ))}
+                <span style={{ width: 44, height: 44, borderRadius: "50%", background: "#fff", color: "#00031C", fontWeight: 800, fontSize: "0.82rem", display: "inline-flex", alignItems: "center", justifyContent: "center", marginLeft: "-12px", position: "relative", zIndex: 5, border: "2px solid #00031C" }}>
+                  500+
+                </span>
+              </div>
+              <div style={{ flex: "1 1 320px", minWidth: "260px" }}>
+                <h2 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 700, color: "#fff" }}>
+                  Join the humankind community
+                </h2>
+                <p style={{ margin: "0.5rem 0 0", fontSize: "0.95rem", lineHeight: 1.65, color: "rgba(255,255,255,0.65)", maxWidth: "56ch" }}>
+                  Practice alongside 500+ conscious members — conferences, ecstatic dance, sound
+                  baths, comedy, and national acts in Sedona, plus every live stream and replay online.
+                </p>
+              </div>
+              <div style={{ flexShrink: 0 }}>
+                <a href={`${APP_URL}/register?tier=full`} style={{ ...ctaBtn, padding: "0.8rem 1.9rem" }}>
+                  Create Your Full Membership →
+                </a>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* ── Mission: image grid left, text right (template hero) ── */}
