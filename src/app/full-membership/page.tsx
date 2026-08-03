@@ -9,7 +9,7 @@ import { Reveal } from "@/components/marketing/reveal";
 import { ShowcaseGallery } from "@/components/marketing/showcase-gallery";
 
 const APP_URL = "https://app.humankind.center";
-const MONTAGE = "https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/hero-montage-v2.mp4";
+const MONTAGE = "https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/hero-montage-v3.mp4";
 const LANDING_IMG = "https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/landing";
 const L2 = "https://jikugigedrzlnwbtgxyo.supabase.co/storage/v1/object/public/news/assets/landing2";
 
