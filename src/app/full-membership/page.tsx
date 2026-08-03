@@ -171,17 +171,21 @@ export default function FullMembershipPage() {
 
           <Reveal direction="left">
             <h1 style={{ ...heading, fontSize: "clamp(2rem, 4.4vw, 3.2rem)" }}>
-              A community for <span style={{ background: "linear-gradient(90deg, #0CB001, #7fe07a)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>raising human consciousness</span>
+              Never miss another night at <span style={{ background: "linear-gradient(90deg, #0CB001, #7fe07a)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>humankind</span>
             </h1>
             <p style={{ ...body, fontSize: "1.1rem", maxWidth: "560px" }}>
-              humankind is a place for people to experience this process together — and without judgement.
-              A living community in Sedona where consciousness, celebration, and self-governance meet.
+              Ecstatic dance nights. Sound voyages and breathwork. National touring acts, comedy,
+              after-dark ceremonies — the calendar here never sleeps. <strong style={{ color: "#fff" }}>Full
+              Membership is your all-access key: every show and every event included</strong>, in the room
+              and streaming live in the app, with every replay waiting when you get home. It pays for
+              itself in three nights — and there are a lot more than three.
             </p>
             <p style={{ ...body, maxWidth: "560px" }}>
-              We practice <strong style={{ color: "#fff" }}>self-governance</strong> — members propose, deliberate,
-              and vote on the community&apos;s direction through our own blockchain-anchored governance. And Sedona
-              is only the beginning: the vision is <strong style={{ color: "#fff" }}>humankind centers around the
-              world</strong>, connected by one network, one membership, one mission.
+              And this is more than a ticket. Full members <strong style={{ color: "#fff" }}>own a voice
+              in where humankind goes</strong> — proposing and voting on the community&apos;s direction through
+              our blockchain-anchored self-governance. Sedona is only the beginning: the vision is humankind
+              centers around the world, one network, one membership. Join now and you&apos;re not buying
+              access — you&apos;re in the founding circle.
             </p>
             <div style={{ marginTop: "1.75rem", display: "flex", gap: "0.9rem", flexWrap: "wrap" }}>
               <a href={`${APP_URL}/memberships`} style={ctaBtn}>Become a Full Member</a>
