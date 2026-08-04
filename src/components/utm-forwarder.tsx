@@ -12,6 +12,24 @@ const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_c
  * them onto the account at signup — so a member who found humankind.center
  * via a Google search shows as Google search, not "ref: humankind.center".
  */
+const TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+// First-touch must survive RETURN visits (2026-08-05: a real ChatGPT-ad
+// signup landed as "ref: humankind.center" because sessionStorage died with
+// the tab — ad clickers often come back days later to sign up). localStorage
+// with a 30-day TTL; first touch still wins.
+function readStored(): Record<string, string> | null {
+  try {
+    const raw = window.localStorage.getItem(KEY) ?? window.sessionStorage.getItem(KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Record<string, string> & { _at?: number };
+    if (parsed._at && Date.now() - parsed._at > TTL_MS) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 export function UtmForwarder() {
   useEffect(() => {
     try {
@@ -25,8 +43,8 @@ export function UtmForwarder() {
       if (ref && !ref.includes(window.location.hostname)) {
         found.hk_ref = ref.slice(0, 300);
       }
-      if (Object.keys(found).length && !window.sessionStorage.getItem(KEY)) {
-        window.sessionStorage.setItem(KEY, JSON.stringify(found));
+      if (Object.keys(found).length && !readStored()) {
+        window.localStorage.setItem(KEY, JSON.stringify({ ...found, _at: Date.now() }));
       }
     } catch { /* storage unavailable */ }
 
@@ -34,12 +52,12 @@ export function UtmForwarder() {
       try {
         const a = (e.target as HTMLElement | null)?.closest?.("a");
         if (!a?.href || !a.href.includes("app.humankind.center")) return;
-        const raw = window.sessionStorage.getItem(KEY);
-        if (!raw) return;
-        const utm = JSON.parse(raw) as Record<string, string>;
+        const utm = readStored();
+        if (!utm) return;
         const url = new URL(a.href);
         for (const [k, v] of Object.entries(utm)) {
-          if (!url.searchParams.has(k)) url.searchParams.set(k, v);
+          if (k === "_at" || !v) continue;
+          if (!url.searchParams.has(k)) url.searchParams.set(k, String(v));
         }
         a.href = url.toString();
       } catch { /* leave link untouched */ }
