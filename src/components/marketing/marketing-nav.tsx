@@ -269,18 +269,20 @@ function UserWidget({ user }: { user: HumankindUser }) {
             position: "absolute",
             top: "calc(100% + 0.5rem)",
             right: 0,
-            minWidth: "230px",
-            background: "#0b1020",
+            width: "min(280px, calc(100vw - 3rem))",
+            background: "rgba(8, 10, 26, 0.98)",
             border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: "16px",
-            padding: "0.5rem",
-            boxShadow: "0 18px 50px rgba(0,0,0,0.55)",
+            borderRadius: "0.75rem",
+            overflow: "hidden",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            boxShadow: "0 12px 40px rgba(0,0,0,0.5)",
             zIndex: 100,
           }}
         >
           {items.map((item, i) =>
             item === "divider" ? (
-              <div key={`d-${i}`} style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "0.375rem 0" }} />
+              <div key={`d-${i}`} style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "0.375rem 0" }} />
             ) : (
               <a
                 key={item.href}
@@ -303,7 +305,7 @@ function UserWidget({ user }: { user: HumankindUser }) {
               </a>
             ),
           )}
-          <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "0.375rem 0" }} />
+          <div style={{ height: 1, background: "rgba(255,255,255,0.06)", margin: "0.375rem 0" }} />
           <a
             href={`${APP_URL}/auth/logout`}
             role="menuitem"
