@@ -280,7 +280,7 @@ function UserWidget({ user }: { user: HumankindUser }) {
         >
           {items.map((item, i) =>
             item === "divider" ? (
-              <div key={`d-${i}`} style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "0.375rem 0.25rem" }} />
+              <div key={`d-${i}`} style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "0.375rem 0" }} />
             ) : (
               <a
                 key={item.href}
@@ -290,9 +290,8 @@ function UserWidget({ user }: { user: HumankindUser }) {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "0.7rem",
-                  padding: "0.625rem 0.875rem",
-                  borderRadius: "10px",
+                  gap: "0.75rem",
+                  padding: "0.75rem 1rem",
                   fontSize: "0.875rem",
                   fontWeight: 500,
                   color: item.accent ?? "rgba(255,255,255,0.85)",
@@ -304,30 +303,33 @@ function UserWidget({ user }: { user: HumankindUser }) {
               </a>
             ),
           )}
-          <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "0.375rem 0.25rem" }} />
+          <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "0.375rem 0" }} />
           <a
             href={`${APP_URL}/auth/logout`}
             role="menuitem"
             className="hk-menu-item"
             onClick={() => clearHumankindUserCache()}
             style={{
-              display: "block",
-              padding: "0.625rem 0.875rem",
-              borderRadius: "10px",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.75rem",
+              padding: "0.75rem 1rem",
               fontSize: "0.875rem",
               fontWeight: 500,
               color: "rgba(255,255,255,0.6)",
               textDecoration: "none",
+              transition: "background 0.15s",
             }}
           >
-            Sign out
+            <MenuItemIcon name="logout" />
+            <span>Sign out</span>
           </a>
         </div>
       )}
 
       <style>{`
         .hk-user-widget:hover { background: rgba(255,255,255,0.05); }
-        .hk-menu-item:hover { background: rgba(255,255,255,0.07); }
+        .hk-menu-item:hover { background: rgba(255,255,255,0.05); }
       `}</style>
     </div>
   );
