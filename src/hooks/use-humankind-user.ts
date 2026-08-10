@@ -34,7 +34,7 @@ export type HumankindUser = {
   /** Profile role — gates the Admin / Check-in dropdown items. */
   role: string | null;
   /** THE menu, computed by the app (single source of truth) — render verbatim. */
-  menu?: Array<{ href: string; label: string; accent?: string } | "divider">;
+  menu?: Array<{ href: string; label: string; icon?: string; accent?: string } | "divider">;
   /** Membership tier ("free" | "online" | "full" | …). */
   tier: string | null;
 };
