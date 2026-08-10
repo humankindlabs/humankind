@@ -33,6 +33,8 @@ export type HumankindUser = {
   username: string | null;
   /** Profile role — gates the Admin / Check-in dropdown items. */
   role: string | null;
+  /** THE menu, computed by the app (single source of truth) — render verbatim. */
+  menu?: Array<{ href: string; label: string; accent?: string } | "divider">;
   /** Membership tier ("free" | "online" | "full" | …). */
   tier: string | null;
 };

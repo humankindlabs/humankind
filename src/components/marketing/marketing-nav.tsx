@@ -199,16 +199,19 @@ function UserWidget({ user }: { user: HumankindUser }) {
   const isAdmin = user.role === "admin" || user.role === "super_admin";
   const canCheckIn = isAdmin || user.role === "host";
 
-  const items: Array<{ href: string; label: string; accent?: string } | "divider"> = [
+  // Prefer THE menu computed by the app (/api/public/me — single source of
+  // truth for every property); the local list is only an offline fallback.
+  const items: Array<{ href: string; label: string; accent?: string } | "divider"> = user.menu ?? [
     { href: `${APP_URL}/media`, label: "Live Stream" },
     { href: paid && u ? `${APP_URL}/human/${u}/events` : `${APP_URL}/events`, label: "Upcoming Events" },
+    { href: "https://stay.humankind.center/", label: "Stay Listings" },
     ...(u ? [{ href: `${APP_URL}/human/${u}`, label: "Account" }] : []),
     ...(paid && u ? [{ href: `${APP_URL}/human/${u}/tickets`, label: "Tickets" }] : []),
     ...(u ? [{ href: `${APP_URL}/human/${u}/gov`, label: "Governance" }] : []),
-    ...(paid && u ? [{ href: `${APP_URL}/human/${u}/settings/billing`, label: "Billing" }] : []),
+    ...(u ? [{ href: `${APP_URL}/human/${u}/settings/billing`, label: "Billing" }] : []),
     ...(isAdmin || canCheckIn ? ["divider" as const] : []),
     ...(isAdmin ? [{ href: `${APP_URL}/admin`, label: "Admin", accent: "#818cf8" }] : []),
-    ...(canCheckIn ? [{ href: `${APP_URL}/check-in/kiosk`, label: "Check-in", accent: "#0CB001" }] : []),
+    ...(canCheckIn ? [{ href: `${APP_URL}/check-in/kiosk`, label: "Check-in", accent: "#34d399" }] : []),
   ];
 
   return (
