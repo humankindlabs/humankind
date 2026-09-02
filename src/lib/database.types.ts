@@ -464,6 +464,66 @@ export type Database = {
         }
         Relationships: []
       }
+      assistant_jobs: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          error: string | null
+          id: string
+          message_id: string
+          processed_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          message_id: string
+          processed_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          message_id?: string
+          processed_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      assistant_notes: {
+        Row: {
+          created_at: string
+          id: string
+          note: string
+          persona: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note: string
+          persona?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string
+          persona?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       auth_login_attempts: {
         Row: {
           admin_notified_at: string | null
@@ -912,6 +972,30 @@ export type Database = {
           created_by?: string | null
           id?: string
           video_id?: string
+        }
+        Relationships: []
+      }
+      content_pass_scopes: {
+        Row: {
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          pass_key: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          pass_key: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          pass_key?: string
         }
         Relationships: []
       }
@@ -1693,6 +1777,53 @@ export type Database = {
         }
         Relationships: []
       }
+      event_content_passes: {
+        Row: {
+          claim_token: string
+          claimed_at: string | null
+          created_at: string
+          email: string
+          event_id: string | null
+          expires_at: string
+          id: string
+          pass_key: string
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          claim_token?: string
+          claimed_at?: string | null
+          created_at?: string
+          email: string
+          event_id?: string | null
+          expires_at: string
+          id?: string
+          pass_key: string
+          source?: string
+          user_id?: string | null
+        }
+        Update: {
+          claim_token?: string
+          claimed_at?: string | null
+          created_at?: string
+          email?: string
+          event_id?: string | null
+          expires_at?: string
+          id?: string
+          pass_key?: string
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_content_passes_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_guest_tickets: {
         Row: {
           booking_id: string | null
@@ -1892,6 +2023,44 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_replay_links: {
+        Row: {
+          auto_grant: boolean
+          content_id: string
+          content_type: string
+          created_at: string
+          event_id: string
+          id: string
+          pass_key: string | null
+        }
+        Insert: {
+          auto_grant?: boolean
+          content_id: string
+          content_type: string
+          created_at?: string
+          event_id: string
+          id?: string
+          pass_key?: string | null
+        }
+        Update: {
+          auto_grant?: boolean
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          event_id?: string
+          id?: string
+          pass_key?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_replay_links_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
             referencedColumns: ["id"]
           },
         ]
@@ -2108,6 +2277,7 @@ export type Database = {
           id: string
           include_discussion_thread: boolean
           include_source_submission: boolean
+          min_verification_tier: number
           next_steps: string | null
           next_steps_updated_at: string | null
           next_steps_updated_by: string | null
@@ -2154,6 +2324,7 @@ export type Database = {
           id?: string
           include_discussion_thread?: boolean
           include_source_submission?: boolean
+          min_verification_tier?: number
           next_steps?: string | null
           next_steps_updated_at?: string | null
           next_steps_updated_by?: string | null
@@ -2200,6 +2371,7 @@ export type Database = {
           id?: string
           include_discussion_thread?: boolean
           include_source_submission?: boolean
+          min_verification_tier?: number
           next_steps?: string | null
           next_steps_updated_at?: string | null
           next_steps_updated_by?: string | null
@@ -2795,6 +2967,7 @@ export type Database = {
           id: string
           last_read_at: string | null
           muted_at: string | null
+          role: string
           unread_count: number
           user_id: string
         }
@@ -2805,6 +2978,7 @@ export type Database = {
           id?: string
           last_read_at?: string | null
           muted_at?: string | null
+          role?: string
           unread_count?: number
           user_id: string
         }
@@ -2815,6 +2989,7 @@ export type Database = {
           id?: string
           last_read_at?: string | null
           muted_at?: string | null
+          role?: string
           unread_count?: number
           user_id?: string
         }
@@ -2832,31 +3007,72 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string | null
-          direct_key: string
+          direct_key: string | null
           id: string
+          image_url: string | null
+          kind: string
           last_message_at: string | null
           status: Database["public"]["Enums"]["message_conversation_status"]
+          title: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           created_by?: string | null
-          direct_key: string
+          direct_key?: string | null
           id?: string
+          image_url?: string | null
+          kind?: string
           last_message_at?: string | null
           status?: Database["public"]["Enums"]["message_conversation_status"]
+          title?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           created_by?: string | null
-          direct_key?: string
+          direct_key?: string | null
           id?: string
+          image_url?: string | null
+          kind?: string
           last_message_at?: string | null
           status?: Database["public"]["Enums"]["message_conversation_status"]
+          title?: string | null
           updated_at?: string
         }
         Relationships: []
+      }
+      message_reactions: {
+        Row: {
+          created_at: string
+          emoji: string
+          id: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emoji: string
+          id?: string
+          message_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emoji?: string
+          id?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_reactions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
         Row: {
@@ -2868,7 +3084,10 @@ export type Database = {
           deleted_at: string | null
           edited_at: string | null
           id: string
+          media_type: string | null
+          media_url: string | null
           message_type: string
+          reply_to_message_id: string | null
           sender_id: string
         }
         Insert: {
@@ -2880,7 +3099,10 @@ export type Database = {
           deleted_at?: string | null
           edited_at?: string | null
           id?: string
+          media_type?: string | null
+          media_url?: string | null
           message_type?: string
+          reply_to_message_id?: string | null
           sender_id: string
         }
         Update: {
@@ -2892,7 +3114,10 @@ export type Database = {
           deleted_at?: string | null
           edited_at?: string | null
           id?: string
+          media_type?: string | null
+          media_url?: string | null
           message_type?: string
+          reply_to_message_id?: string | null
           sender_id?: string
         }
         Relationships: [
@@ -2901,6 +3126,13 @@ export type Database = {
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "message_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_reply_to_message_id_fkey"
+            columns: ["reply_to_message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
             referencedColumns: ["id"]
           },
         ]
@@ -2932,6 +3164,30 @@ export type Database = {
         }
         Relationships: []
       }
+      news_engagement: {
+        Row: {
+          dislikes: number
+          likes: number
+          slug: string
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          dislikes?: number
+          likes?: number
+          slug: string
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          dislikes?: number
+          likes?: number
+          slug?: string
+          updated_at?: string
+          views?: number
+        }
+        Relationships: []
+      }
       notification_preferences: {
         Row: {
           email_community_announcements: boolean | null
@@ -2956,6 +3212,7 @@ export type Database = {
           push_governance_proposals: boolean
           push_live_starting: boolean
           push_livestream_alerts: boolean | null
+          push_messages: boolean
           push_new_events: boolean | null
           push_proposal_status: boolean
           push_series_episode: boolean
@@ -2985,6 +3242,7 @@ export type Database = {
           push_governance_proposals?: boolean
           push_live_starting?: boolean
           push_livestream_alerts?: boolean | null
+          push_messages?: boolean
           push_new_events?: boolean | null
           push_proposal_status?: boolean
           push_series_episode?: boolean
@@ -3014,6 +3272,7 @@ export type Database = {
           push_governance_proposals?: boolean
           push_live_starting?: boolean
           push_livestream_alerts?: boolean | null
+          push_messages?: boolean
           push_new_events?: boolean | null
           push_proposal_status?: boolean
           push_series_episode?: boolean
@@ -3095,6 +3354,7 @@ export type Database = {
           phone: string | null
           promo_code: string | null
           region: string | null
+          signup_source: Json | null
           terms_accepted_at: string | null
           terms_version: string | null
           tier: string
@@ -3118,6 +3378,7 @@ export type Database = {
           phone?: string | null
           promo_code?: string | null
           region?: string | null
+          signup_source?: Json | null
           terms_accepted_at?: string | null
           terms_version?: string | null
           tier: string
@@ -3141,6 +3402,7 @@ export type Database = {
           phone?: string | null
           promo_code?: string | null
           region?: string | null
+          signup_source?: Json | null
           terms_accepted_at?: string | null
           terms_version?: string | null
           tier?: string
@@ -3212,6 +3474,7 @@ export type Database = {
           id: string
           instagram_url: string | null
           interests: string[] | null
+          is_agent: boolean
           last_name: string | null
           local_status: string | null
           messaging_privacy: string
@@ -3221,6 +3484,7 @@ export type Database = {
           phone_verified: boolean | null
           referral_source: string | null
           role: string | null
+          signup_source: Json | null
           suspended_until: string | null
           terms_accepted_at: string | null
           terms_version: string | null
@@ -3257,6 +3521,7 @@ export type Database = {
           id: string
           instagram_url?: string | null
           interests?: string[] | null
+          is_agent?: boolean
           last_name?: string | null
           local_status?: string | null
           messaging_privacy?: string
@@ -3266,6 +3531,7 @@ export type Database = {
           phone_verified?: boolean | null
           referral_source?: string | null
           role?: string | null
+          signup_source?: Json | null
           suspended_until?: string | null
           terms_accepted_at?: string | null
           terms_version?: string | null
@@ -3302,6 +3568,7 @@ export type Database = {
           id?: string
           instagram_url?: string | null
           interests?: string[] | null
+          is_agent?: boolean
           last_name?: string | null
           local_status?: string | null
           messaging_privacy?: string
@@ -3311,6 +3578,7 @@ export type Database = {
           phone_verified?: boolean | null
           referral_source?: string | null
           role?: string | null
+          signup_source?: Json | null
           suspended_until?: string | null
           terms_accepted_at?: string | null
           terms_version?: string | null
@@ -4010,6 +4278,50 @@ export type Database = {
         }
         Relationships: []
       }
+      stay_api_keys: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          key_hash: string
+          key_prefix: string
+          label: string
+          last_used_at: string | null
+          property_id: string
+          revoked_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          key_hash: string
+          key_prefix: string
+          label?: string
+          last_used_at?: string | null
+          property_id: string
+          revoked_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          key_hash?: string
+          key_prefix?: string
+          label?: string
+          last_used_at?: string | null
+          property_id?: string
+          revoked_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stay_api_keys_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "stay_properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stay_blocked_dates: {
         Row: {
           created_at: string
@@ -4104,6 +4416,7 @@ export type Database = {
           guest_user_id: string
           guests: number
           host_payout_cents: number | null
+          host_subtotal_cents: number | null
           id: string
           nightly_cents: number
           nights: number
@@ -4137,6 +4450,7 @@ export type Database = {
           guest_user_id: string
           guests?: number
           host_payout_cents?: number | null
+          host_subtotal_cents?: number | null
           id?: string
           nightly_cents: number
           nights: number
@@ -4170,6 +4484,7 @@ export type Database = {
           guest_user_id?: string
           guests?: number
           host_payout_cents?: number | null
+          host_subtotal_cents?: number | null
           id?: string
           nightly_cents?: number
           nights?: number
@@ -4355,11 +4670,13 @@ export type Database = {
           created_at: string
           email: string | null
           first_name: string | null
+          host_category: string | null
           id: string
           last_name: string | null
           latitude: number | null
           location_verified: boolean
           longitude: number | null
+          needs_onboarding_help: boolean | null
           number_of_properties: number | null
           other_url: string | null
           phone: string | null
@@ -4368,6 +4685,8 @@ export type Database = {
           property_type_other: string | null
           review: Json
           reviewed_at: string | null
+          room_count: number | null
+          room_types_count: number | null
           sleeps: number | null
           state: string | null
           status: string
@@ -4375,6 +4694,7 @@ export type Database = {
           unit_number: string | null
           updated_at: string
           user_id: string | null
+          uses_pms: boolean | null
           vrbo_url: string | null
           website_url: string | null
           zip_code: string | null
@@ -4391,11 +4711,13 @@ export type Database = {
           created_at?: string
           email?: string | null
           first_name?: string | null
+          host_category?: string | null
           id?: string
           last_name?: string | null
           latitude?: number | null
           location_verified?: boolean
           longitude?: number | null
+          needs_onboarding_help?: boolean | null
           number_of_properties?: number | null
           other_url?: string | null
           phone?: string | null
@@ -4404,6 +4726,8 @@ export type Database = {
           property_type_other?: string | null
           review?: Json
           reviewed_at?: string | null
+          room_count?: number | null
+          room_types_count?: number | null
           sleeps?: number | null
           state?: string | null
           status?: string
@@ -4411,6 +4735,7 @@ export type Database = {
           unit_number?: string | null
           updated_at?: string
           user_id?: string | null
+          uses_pms?: boolean | null
           vrbo_url?: string | null
           website_url?: string | null
           zip_code?: string | null
@@ -4427,11 +4752,13 @@ export type Database = {
           created_at?: string
           email?: string | null
           first_name?: string | null
+          host_category?: string | null
           id?: string
           last_name?: string | null
           latitude?: number | null
           location_verified?: boolean
           longitude?: number | null
+          needs_onboarding_help?: boolean | null
           number_of_properties?: number | null
           other_url?: string | null
           phone?: string | null
@@ -4440,6 +4767,8 @@ export type Database = {
           property_type_other?: string | null
           review?: Json
           reviewed_at?: string | null
+          room_count?: number | null
+          room_types_count?: number | null
           sleeps?: number | null
           state?: string | null
           status?: string
@@ -4447,6 +4776,7 @@ export type Database = {
           unit_number?: string | null
           updated_at?: string
           user_id?: string | null
+          uses_pms?: boolean | null
           vrbo_url?: string | null
           website_url?: string | null
           zip_code?: string | null
@@ -4641,6 +4971,59 @@ export type Database = {
           },
         ]
       }
+      stay_pms_connections: {
+        Row: {
+          access_token: string
+          active: boolean
+          created_at: string
+          created_by: string | null
+          external_property_id: string
+          external_property_name: string | null
+          id: string
+          last_status: string | null
+          last_synced_at: string | null
+          property_id: string | null
+          provider: string
+          user_id: string | null
+        }
+        Insert: {
+          access_token: string
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          external_property_id: string
+          external_property_name?: string | null
+          id?: string
+          last_status?: string | null
+          last_synced_at?: string | null
+          property_id?: string | null
+          provider?: string
+          user_id?: string | null
+        }
+        Update: {
+          access_token?: string
+          active?: boolean
+          created_at?: string
+          created_by?: string | null
+          external_property_id?: string
+          external_property_name?: string | null
+          id?: string
+          last_status?: string | null
+          last_synced_at?: string | null
+          property_id?: string | null
+          provider?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stay_pms_connections_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "stay_properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stay_properties: {
         Row: {
           address: string | null
@@ -4664,6 +5047,7 @@ export type Database = {
           lat: number | null
           lng: number | null
           max_guests: number
+          member_extra_discount_pct: number
           member_price_cents: number | null
           min_nights: number
           photos: Json
@@ -4698,6 +5082,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           max_guests?: number
+          member_extra_discount_pct?: number
           member_price_cents?: number | null
           min_nights?: number
           photos?: Json
@@ -4732,6 +5117,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           max_guests?: number
+          member_extra_discount_pct?: number
           member_price_cents?: number | null
           min_nights?: number
           photos?: Json
@@ -4750,6 +5136,54 @@ export type Database = {
             columns: ["host_id"]
             isOneToOne: false
             referencedRelation: "stay_hosts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stay_rate_calendar: {
+        Row: {
+          date: string
+          id: string
+          min_nights: number | null
+          price_cents: number
+          property_id: string
+          source: string
+          unit_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          date: string
+          id?: string
+          min_nights?: number | null
+          price_cents: number
+          property_id: string
+          source?: string
+          unit_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          date?: string
+          id?: string
+          min_nights?: number | null
+          price_cents?: number
+          property_id?: string
+          source?: string
+          unit_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stay_rate_calendar_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "stay_properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stay_rate_calendar_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "stay_units"
             referencedColumns: ["id"]
           },
         ]
@@ -4807,6 +5241,7 @@ export type Database = {
           cleaning_fee_cents: number
           created_at: string
           description: string | null
+          external_code: string | null
           ical_token: string | null
           id: string
           member_price_cents: number | null
@@ -4824,6 +5259,7 @@ export type Database = {
           cleaning_fee_cents?: number
           created_at?: string
           description?: string | null
+          external_code?: string | null
           ical_token?: string | null
           id?: string
           member_price_cents?: number | null
@@ -4841,6 +5277,7 @@ export type Database = {
           cleaning_fee_cents?: number
           created_at?: string
           description?: string | null
+          external_code?: string | null
           ical_token?: string | null
           id?: string
           member_price_cents?: number | null
@@ -4927,6 +5364,497 @@ export type Database = {
           recurring_tz?: string | null
           slug?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      trading_equity: {
+        Row: {
+          by_leg: Json
+          total_usd: number
+          ts: string
+        }
+        Insert: {
+          by_leg?: Json
+          total_usd: number
+          ts?: string
+        }
+        Update: {
+          by_leg?: Json
+          total_usd?: number
+          ts?: string
+        }
+        Relationships: []
+      }
+      trading_funding_policy: {
+        Row: {
+          enabled: boolean
+          gas_daily_bnb: number
+          global_daily_usd: number
+          global_monthly_usd: number
+          global_weekly_usd: number
+          id: boolean
+          per_agent_daily_usd: number
+          per_agent_monthly_usd: number
+          per_agent_weekly_usd: number
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          gas_daily_bnb?: number
+          global_daily_usd?: number
+          global_monthly_usd?: number
+          global_weekly_usd?: number
+          id?: boolean
+          per_agent_daily_usd?: number
+          per_agent_monthly_usd?: number
+          per_agent_weekly_usd?: number
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          gas_daily_bnb?: number
+          global_daily_usd?: number
+          global_monthly_usd?: number
+          global_weekly_usd?: number
+          id?: boolean
+          per_agent_daily_usd?: number
+          per_agent_monthly_usd?: number
+          per_agent_weekly_usd?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      trading_fundings: {
+        Row: {
+          agent: string
+          amount: number
+          asset: string
+          created_at: string
+          id: string
+          note: string | null
+          requested_by: string | null
+          status: string
+          tx: string | null
+          updated_at: string
+          usd_value: number | null
+        }
+        Insert: {
+          agent: string
+          amount: number
+          asset?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          requested_by?: string | null
+          status?: string
+          tx?: string | null
+          updated_at?: string
+          usd_value?: number | null
+        }
+        Update: {
+          agent?: string
+          amount?: number
+          asset?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          requested_by?: string | null
+          status?: string
+          tx?: string | null
+          updated_at?: string
+          usd_value?: number | null
+        }
+        Relationships: []
+      }
+      trading_movements: {
+        Row: {
+          amount: number
+          asset: string
+          at: string
+          chain: string | null
+          created_at: string
+          destination: string
+          id: string
+          kind: string
+          note: string | null
+          ref: string | null
+          source: string
+          tx: string | null
+          usd_value: number | null
+        }
+        Insert: {
+          amount: number
+          asset: string
+          at: string
+          chain?: string | null
+          created_at?: string
+          destination: string
+          id?: string
+          kind: string
+          note?: string | null
+          ref?: string | null
+          source: string
+          tx?: string | null
+          usd_value?: number | null
+        }
+        Update: {
+          amount?: number
+          asset?: string
+          at?: string
+          chain?: string | null
+          created_at?: string
+          destination?: string
+          id?: string
+          kind?: string
+          note?: string | null
+          ref?: string | null
+          source?: string
+          tx?: string | null
+          usd_value?: number | null
+        }
+        Relationships: []
+      }
+      trading_payout_audit: {
+        Row: {
+          action: string
+          actor_email: string | null
+          created_at: string
+          destination_id: string | null
+          detail: Json | null
+          id: string
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          created_at?: string
+          destination_id?: string | null
+          detail?: Json | null
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          created_at?: string
+          destination_id?: string | null
+          detail?: Json | null
+          id?: string
+        }
+        Relationships: []
+      }
+      trading_payout_config: {
+        Row: {
+          enabled: boolean
+          id: boolean
+          last_run_cycle: string | null
+          max_per_cycle_usd: number
+          min_profit_usd: number
+          notify_phone_encrypted: string | null
+          notify_phone_hint: string | null
+          payout_day: number
+          pct_of_profit: number
+          profit_mark_at: string
+          totp_enrolled_at: string | null
+          totp_last_counter: number | null
+          totp_secret_encrypted: string | null
+          updated_at: string
+        }
+        Insert: {
+          enabled?: boolean
+          id?: boolean
+          last_run_cycle?: string | null
+          max_per_cycle_usd?: number
+          min_profit_usd?: number
+          notify_phone_encrypted?: string | null
+          notify_phone_hint?: string | null
+          payout_day?: number
+          pct_of_profit?: number
+          profit_mark_at?: string
+          totp_enrolled_at?: string | null
+          totp_last_counter?: number | null
+          totp_secret_encrypted?: string | null
+          updated_at?: string
+        }
+        Update: {
+          enabled?: boolean
+          id?: boolean
+          last_run_cycle?: string | null
+          max_per_cycle_usd?: number
+          min_profit_usd?: number
+          notify_phone_encrypted?: string | null
+          notify_phone_hint?: string | null
+          payout_day?: number
+          pct_of_profit?: number
+          profit_mark_at?: string
+          totp_enrolled_at?: string | null
+          totp_last_counter?: number | null
+          totp_secret_encrypted?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      trading_payout_destinations: {
+        Row: {
+          address_encrypted: string
+          address_fingerprint: string
+          address_hint: string
+          asset: string
+          created_at: string
+          email_encrypted: string
+          email_hint: string
+          id: string
+          share_pct: number
+          status: string
+          updated_at: string
+          username: string
+          verified_at: string | null
+          verify_amount: number | null
+          verify_attempts: number
+          verify_expires_at: string | null
+          verify_sent_at: string | null
+          verify_token_hash: string | null
+          verify_tx: string | null
+        }
+        Insert: {
+          address_encrypted: string
+          address_fingerprint: string
+          address_hint: string
+          asset: string
+          created_at?: string
+          email_encrypted: string
+          email_hint: string
+          id?: string
+          share_pct?: number
+          status?: string
+          updated_at?: string
+          username: string
+          verified_at?: string | null
+          verify_amount?: number | null
+          verify_attempts?: number
+          verify_expires_at?: string | null
+          verify_sent_at?: string | null
+          verify_token_hash?: string | null
+          verify_tx?: string | null
+        }
+        Update: {
+          address_encrypted?: string
+          address_fingerprint?: string
+          address_hint?: string
+          asset?: string
+          created_at?: string
+          email_encrypted?: string
+          email_hint?: string
+          id?: string
+          share_pct?: number
+          status?: string
+          updated_at?: string
+          username?: string
+          verified_at?: string | null
+          verify_amount?: number | null
+          verify_attempts?: number
+          verify_expires_at?: string | null
+          verify_sent_at?: string | null
+          verify_token_hash?: string | null
+          verify_tx?: string | null
+        }
+        Relationships: []
+      }
+      trading_payouts: {
+        Row: {
+          address_hint: string
+          amount: number
+          amount_usd: number | null
+          asset: string
+          created_at: string
+          cycle: string | null
+          destination_id: string | null
+          emailed_at: string | null
+          id: string
+          kind: string
+          note: string | null
+          status: string
+          tx: string | null
+          username: string | null
+        }
+        Insert: {
+          address_hint: string
+          amount: number
+          amount_usd?: number | null
+          asset: string
+          created_at?: string
+          cycle?: string | null
+          destination_id?: string | null
+          emailed_at?: string | null
+          id?: string
+          kind?: string
+          note?: string | null
+          status?: string
+          tx?: string | null
+          username?: string | null
+        }
+        Update: {
+          address_hint?: string
+          amount?: number
+          amount_usd?: number | null
+          asset?: string
+          created_at?: string
+          cycle?: string | null
+          destination_id?: string | null
+          emailed_at?: string | null
+          id?: string
+          kind?: string
+          note?: string | null
+          status?: string
+          tx?: string | null
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trading_payouts_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "trading_payout_destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trading_state: {
+        Row: {
+          leg: string
+          state: Json
+          updated_at: string
+        }
+        Insert: {
+          leg: string
+          state: Json
+          updated_at?: string
+        }
+        Update: {
+          leg?: string
+          state?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      trading_step_codes: {
+        Row: {
+          attempts: number
+          code_hash: string
+          consumed_at: string | null
+          created_at: string
+          expires_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          consumed_at?: string | null
+          created_at?: string
+          expires_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      trading_sweeps: {
+        Row: {
+          agent: string
+          amount: number | null
+          asset: string
+          created_at: string
+          id: string
+          note: string | null
+          requested_by: string | null
+          status: string
+          tx: string | null
+          updated_at: string
+        }
+        Insert: {
+          agent: string
+          amount?: number | null
+          asset?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          requested_by?: string | null
+          status?: string
+          tx?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agent?: string
+          amount?: number | null
+          asset?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          requested_by?: string | null
+          status?: string
+          tx?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      trading_treasury: {
+        Row: {
+          address: string | null
+          balances: Json | null
+          bnb_balance: number | null
+          eth_balance: number | null
+          id: boolean
+          updated_at: string
+          usdt_balance: number | null
+        }
+        Insert: {
+          address?: string | null
+          balances?: Json | null
+          bnb_balance?: number | null
+          eth_balance?: number | null
+          id?: boolean
+          updated_at?: string
+          usdt_balance?: number | null
+        }
+        Update: {
+          address?: string | null
+          balances?: Json | null
+          bnb_balance?: number | null
+          eth_balance?: number | null
+          id?: boolean
+          updated_at?: string
+          usdt_balance?: number | null
+        }
+        Relationships: []
+      }
+      trading_treasury_deposits: {
+        Row: {
+          amount: number
+          asset: string
+          balance_after: number
+          detected_at: string
+          id: string
+        }
+        Insert: {
+          amount: number
+          asset: string
+          balance_after: number
+          detected_at?: string
+          id?: string
+        }
+        Update: {
+          amount?: number
+          asset?: string
+          balance_after?: number
+          detected_at?: string
+          id?: string
         }
         Relationships: []
       }
@@ -5459,6 +6387,452 @@ export type Database = {
         }
         Relationships: []
       }
+      wallet_activations: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          identity_confirmed_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          identity_confirmed_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          identity_confirmed_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallet_audit: {
+        Row: {
+          action: string
+          created_at: string
+          detail: Json | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          detail?: Json | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          detail?: Json | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      wallet_cards: {
+        Row: {
+          activated_at: string | null
+          code_hash: string
+          code_sealed: string | null
+          created_at: string
+          deactivated_at: string | null
+          id: string
+          label: string | null
+          serial: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          activated_at?: string | null
+          code_hash: string
+          code_sealed?: string | null
+          created_at?: string
+          deactivated_at?: string | null
+          id?: string
+          label?: string | null
+          serial?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          activated_at?: string | null
+          code_hash?: string
+          code_sealed?: string | null
+          created_at?: string
+          deactivated_at?: string | null
+          id?: string
+          label?: string | null
+          serial?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      wallet_files: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          folder_id: string | null
+          id: string
+          mime: string | null
+          name: string
+          sha256: string
+          size_bytes: number
+          starred: boolean
+          storage_path: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          folder_id?: string | null
+          id?: string
+          mime?: string | null
+          name: string
+          sha256: string
+          size_bytes: number
+          starred?: boolean
+          storage_path: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          folder_id?: string | null
+          id?: string
+          mime?: string | null
+          name?: string
+          sha256?: string
+          size_bytes?: number
+          starred?: boolean
+          storage_path?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_files_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_folders: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          parent_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          parent_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          parent_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_folders_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_record_anchors: {
+        Row: {
+          anchored_at: string
+          created_at: string
+          id: string
+          manifest: string
+          network: string
+          record_id: string
+          sequence: number
+          sha256: string
+          topic_id: string
+          transaction_id: string
+          user_id: string
+        }
+        Insert: {
+          anchored_at: string
+          created_at?: string
+          id?: string
+          manifest: string
+          network: string
+          record_id: string
+          sequence: number
+          sha256: string
+          topic_id: string
+          transaction_id: string
+          user_id: string
+        }
+        Update: {
+          anchored_at?: string
+          created_at?: string
+          id?: string
+          manifest?: string
+          network?: string
+          record_id?: string
+          sequence?: number
+          sha256?: string
+          topic_id?: string
+          transaction_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_record_anchors_record_id_fkey"
+            columns: ["record_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_record_files: {
+        Row: {
+          created_at: string
+          file_id: string
+          position: number
+          public: boolean
+          record_id: string
+          role: string
+        }
+        Insert: {
+          created_at?: string
+          file_id: string
+          position?: number
+          public?: boolean
+          record_id: string
+          role?: string
+        }
+        Update: {
+          created_at?: string
+          file_id?: string
+          position?: number
+          public?: boolean
+          record_id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_record_files_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_files"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_record_files_record_id_fkey"
+            columns: ["record_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_records: {
+        Row: {
+          anchor: Json | null
+          anchor_manifest: string | null
+          anchor_pending: Json | null
+          certified_article: string | null
+          county: string | null
+          created_at: string
+          document_number: string | null
+          grantee: string | null
+          grantor: string | null
+          id: string
+          instrument_number: string | null
+          notary: Json | null
+          notes: string | null
+          page_count: number | null
+          process_number: string | null
+          public_token: string | null
+          public_views: number
+          published_at: string | null
+          rebuttals: Json
+          record_type: string
+          recorded_at: string | null
+          recorder_url: string | null
+          recording_fee: string | null
+          seasoning_days: number
+          title: string
+          updated_at: string
+          user_id: string
+          witnesses: Json
+        }
+        Insert: {
+          anchor?: Json | null
+          anchor_manifest?: string | null
+          anchor_pending?: Json | null
+          certified_article?: string | null
+          county?: string | null
+          created_at?: string
+          document_number?: string | null
+          grantee?: string | null
+          grantor?: string | null
+          id?: string
+          instrument_number?: string | null
+          notary?: Json | null
+          notes?: string | null
+          page_count?: number | null
+          process_number?: string | null
+          public_token?: string | null
+          public_views?: number
+          published_at?: string | null
+          rebuttals?: Json
+          record_type?: string
+          recorded_at?: string | null
+          recorder_url?: string | null
+          recording_fee?: string | null
+          seasoning_days?: number
+          title: string
+          updated_at?: string
+          user_id: string
+          witnesses?: Json
+        }
+        Update: {
+          anchor?: Json | null
+          anchor_manifest?: string | null
+          anchor_pending?: Json | null
+          certified_article?: string | null
+          county?: string | null
+          created_at?: string
+          document_number?: string | null
+          grantee?: string | null
+          grantor?: string | null
+          id?: string
+          instrument_number?: string | null
+          notary?: Json | null
+          notes?: string | null
+          page_count?: number | null
+          process_number?: string | null
+          public_token?: string | null
+          public_views?: number
+          published_at?: string | null
+          rebuttals?: Json
+          record_type?: string
+          recorded_at?: string | null
+          recorder_url?: string | null
+          recording_fee?: string | null
+          seasoning_days?: number
+          title?: string
+          updated_at?: string
+          user_id?: string
+          witnesses?: Json
+        }
+        Relationships: []
+      }
+      wallet_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      wallet_shares: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          file_id: string
+          id: string
+          mode: string
+          revoked_at: string | null
+          token: string
+          user_id: string
+          view_count: number
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          file_id: string
+          id?: string
+          mode?: string
+          revoked_at?: string | null
+          token: string
+          user_id: string
+          view_count?: number
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          file_id?: string
+          id?: string
+          mode?: string
+          revoked_at?: string | null
+          token?: string
+          user_id?: string
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_shares_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_totp: {
+        Row: {
+          created_at: string
+          enrolled_at: string | null
+          last_counter: number | null
+          secret_encrypted: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          enrolled_at?: string | null
+          last_counter?: number | null
+          secret_encrypted: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          enrolled_at?: string | null
+          last_counter?: number | null
+          secret_encrypted?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       watch_progress: {
         Row: {
           completed: boolean
@@ -5701,6 +7075,14 @@ export type Database = {
         Returns: undefined
       }
       is_admin: { Args: never; Returns: boolean }
+      news_engage: {
+        Args: { p_action: string; p_slug: string }
+        Returns: {
+          dislikes: number
+          likes: number
+          views: number
+        }[]
+      }
       refresh_analytics_views: { Args: never; Returns: undefined }
     }
     Enums: {
@@ -5735,12 +7117,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -5764,11 +7146,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -5789,11 +7171,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -5814,11 +7196,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -5831,11 +7213,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
