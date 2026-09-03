@@ -5804,6 +5804,96 @@ export type Database = {
         }
         Relationships: []
       }
+      trading_trade_ledger: {
+        Row: {
+          adds: Json
+          attribution: Json
+          avg_entry: number | null
+          closed_at: string | null
+          entry_price: number
+          entry_qty: number
+          entry_score: number | null
+          entry_signals: Json
+          entry_usd: number
+          exit_price: number | null
+          exit_reason: string | null
+          exit_usd: number | null
+          leg: string
+          mae_pct: number | null
+          mfe_pct: number | null
+          mode: string
+          opened_at: string
+          pnl_pct: number | null
+          pnl_usd: number | null
+          qty: number | null
+          size_plan: Json
+          strategy: string | null
+          sym: string
+          total_usd: number | null
+          trade_id: string
+          txs: Json
+          updated_at: string
+        }
+        Insert: {
+          adds?: Json
+          attribution?: Json
+          avg_entry?: number | null
+          closed_at?: string | null
+          entry_price: number
+          entry_qty: number
+          entry_score?: number | null
+          entry_signals?: Json
+          entry_usd: number
+          exit_price?: number | null
+          exit_reason?: string | null
+          exit_usd?: number | null
+          leg: string
+          mae_pct?: number | null
+          mfe_pct?: number | null
+          mode: string
+          opened_at: string
+          pnl_pct?: number | null
+          pnl_usd?: number | null
+          qty?: number | null
+          size_plan?: Json
+          strategy?: string | null
+          sym: string
+          total_usd?: number | null
+          trade_id: string
+          txs?: Json
+          updated_at?: string
+        }
+        Update: {
+          adds?: Json
+          attribution?: Json
+          avg_entry?: number | null
+          closed_at?: string | null
+          entry_price?: number
+          entry_qty?: number
+          entry_score?: number | null
+          entry_signals?: Json
+          entry_usd?: number
+          exit_price?: number | null
+          exit_reason?: string | null
+          exit_usd?: number | null
+          leg?: string
+          mae_pct?: number | null
+          mfe_pct?: number | null
+          mode?: string
+          opened_at?: string
+          pnl_pct?: number | null
+          pnl_usd?: number | null
+          qty?: number | null
+          size_plan?: Json
+          strategy?: string | null
+          sym?: string
+          total_usd?: number | null
+          trade_id?: string
+          txs?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       trading_treasury: {
         Row: {
           address: string | null
@@ -6555,6 +6645,56 @@ export type Database = {
             columns: ["parent_id"]
             isOneToOne: false
             referencedRelation: "wallet_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_grants: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          file_id: string
+          grantee_email: string
+          grantee_user_id: string | null
+          id: string
+          last_viewed_at: string | null
+          mode: string
+          owner_id: string
+          revoked_at: string | null
+          view_count: number
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          file_id: string
+          grantee_email: string
+          grantee_user_id?: string | null
+          id?: string
+          last_viewed_at?: string | null
+          mode?: string
+          owner_id: string
+          revoked_at?: string | null
+          view_count?: number
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          file_id?: string
+          grantee_email?: string
+          grantee_user_id?: string | null
+          id?: string
+          last_viewed_at?: string | null
+          mode?: string
+          owner_id?: string
+          revoked_at?: string | null
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_grants_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "wallet_files"
             referencedColumns: ["id"]
           },
         ]
