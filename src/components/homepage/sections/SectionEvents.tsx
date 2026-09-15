@@ -11,7 +11,9 @@ type Event = {
 };
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" });
+  // events are Sedona events: render the date in Phoenix time, not the
+  // server's UTC clock (a 5 PM show read as the next day — John 9/14)
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "America/Phoenix" });
 }
 
 export function SectionEvents({ events }: { events: Event[] }) {
