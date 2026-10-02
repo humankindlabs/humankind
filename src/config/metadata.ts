@@ -5,7 +5,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const SITE_NAME = "Humankind";
-const SITE_URL  = "https://app.humankind.center";
+const SITE_URL  = "https://humankind.center";         // this site's own address (og:url). It read app.humankind.center
+const APP_URL   = "https://app.humankind.center";     // until 10/2: Facebook followed it and showed the app's (empty) preview
 const OG_IMAGE  = "/og-image.jpg";
 const TWITTER   = "@athumankind";
 
@@ -14,7 +15,7 @@ const baseOG = {
   siteName: SITE_NAME,
   type:     "website" as const,
   locale:   "en_US",
-  images:   [{ url: OG_IMAGE, width: 1200, height: 630, alt: `${SITE_NAME} — Conscious Community in Sedona` }],
+  images:   [{ url: OG_IMAGE, width: 1920, height: 1080, alt: `${SITE_NAME} — Conscious Community in Sedona` }],
 };
 
 const baseTwitter = {
@@ -74,7 +75,7 @@ export const pageMeta = {
   register: {
     title: "Join Free",
     description: "Create your free Humankind account and join our conscious community in Sedona.",
-    openGraph: { ...baseOG, url: `${SITE_URL}/register` },
+    openGraph: { ...baseOG, url: `${APP_URL}/register` },
     twitter: baseTwitter,
   },
 
@@ -100,7 +101,7 @@ export const pageMeta = {
   memberships: {
     title: "Membership Plans",
     description: "Choose a Humankind membership — Free, Online Access ($11/mo), or Full Membership ($77/mo).",
-    openGraph: { ...baseOG, url: `${SITE_URL}/memberships` },
+    openGraph: { ...baseOG, url: `${APP_URL}/memberships` },
     twitter: baseTwitter,
   },
 
