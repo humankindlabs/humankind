@@ -28,6 +28,10 @@ export const metadata: Metadata = {
   verification: {
     google: "N9Sv-wjBToqWx51E_oL9PSRRHTobsvoSWiwesM4-C0w",
   },
+  // fb:app_id — the Humankind Facebook app; Facebook's Sharing Debugger asks for it (John 10/2)
+  facebook: {
+    appId: "2295946720680376",
+  },
   title: {
     default: "humankind",
     template: "%s · humankind",
