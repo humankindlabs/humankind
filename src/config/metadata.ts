@@ -58,6 +58,13 @@ export const pageMeta = {
     twitter: baseTwitter,
   },
 
+  affiliateProgram: {
+    title: "Affiliate Program",
+    description: "How Humankind members earn on the memberships of the people they refer: rates, durations, membership credit and cash-out.",
+    openGraph: { ...baseOG, url: `${SITE_URL}/affiliate-program` },
+    twitter: baseTwitter,
+  },
+
   terms: {
     title: "Terms of Use",
     description: "The terms and conditions governing your use of the Humankind platform and services.",

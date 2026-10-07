@@ -163,6 +163,7 @@ export function HomepageFooter() {
         <div style={{ display: "flex", gap: "1.5rem" }}>
           <Link href="/privacy" style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.25)", textDecoration: "none" }}>Privacy Policy</Link>
           <Link href="/terms" style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.25)", textDecoration: "none" }}>Terms & Conditions</Link>
+          <Link href="/affiliate-program" style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.25)", textDecoration: "none" }}>Affiliate Program</Link>
         </div>
       </div>
 
