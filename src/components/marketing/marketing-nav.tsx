@@ -383,6 +383,9 @@ function MenuItemIcon({ name }: { name: string }) {
       {name === "card" && (
         <svg {...props}><rect x="2" y="5" width="20" height="14" rx="2" ry="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
       )}
+      {name === "wallet" && (
+        <svg {...props}><path d="M21 7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16V7" /><path d="M16 14h.01" /></svg>
+      )}
       {name === "logout" && (
         <svg {...props}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
       )}
