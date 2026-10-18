@@ -58,6 +58,12 @@ export const pageMeta = {
     twitter: baseTwitter,
   },
 
+  nftRewards: {
+    title: "NFT Rewards",
+    description: "Every Humankind ticket comes with a one-of-a-kind collectable card: how the cards work, how to collect and trade them, and the sets that unlock real rewards.",
+    openGraph: { ...baseOG, url: `${SITE_URL}/nft-rewards` },
+    twitter: baseTwitter,
+  },
   affiliateProgram: {
     title: "Affiliate Program",
     description: "How Humankind members earn on the memberships of the people they refer: rates, durations, membership credit and cash-out.",
