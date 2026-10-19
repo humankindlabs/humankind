@@ -36,20 +36,21 @@ Your ticket number decides your card. Nobody, not even Humankind, chooses who ge
     title: "Sets and Rewards",
     content: `A set is a group of cards that, held together in your wallet, unlocks a reward. Claiming a reward does not use up your cards: they stay yours, and the same card can count toward more than one set. Each reward is claimed once per member, per set, per deck.
 
-• Pair — two cards of the same rank from one deck: a members-only replay of the event
-• Attended three — three attended cards from any three events: a drink at the venue
-• Flush — five cards of one suit from one deck: a ticket to the next event in the series
-• Four of a kind — the same rank in all four suits of one deck: front row, and a word with the artist after
-• Full suit — all thirteen cards of one suit from one deck: a season pass to the series
-• Royal — Ace, King, Queen, Jack and Ten of one suit from one deck: the printed foil of that suit, mailed, and your name on the event page
-• Deck — all 52 cards of one deck: your name on the venue wall, and a lifetime seat at that show
-• Lotus — one attended card from every event in a year: the year's Lotus card, minted only for this set
+The sets:
+• Pair — two cards of the same rank from one deck
+• Attended three — three attended cards from any three events
+• Flush — five cards of one suit from one deck
+• Four of a kind — the same rank in all four suits of one deck
+• Full suit — all thirteen cards of one suit from one deck
+• Royal — Ace, King, Queen, Jack and Ten of one suit from one deck
+• Deck — all 52 cards of one deck
+• Lotus — one attended card from every event in a year
 
-Gold and foil cards count like any other card in a set. Foil holders also receive the printed card when printing begins.`,
+The rewards are coming soon. Each set's reward is announced here and in your wallet before it can be claimed; your progress toward every set counts from your first card. Gold and foil cards count like any other card in a set.`,
   },
   {
     title: "Claiming a Reward",
-    content: `Open your wallet's Collection and the Sets & rewards panel. Each set shows a progress bar; when a set is complete, a Claim button appears. Claiming gives you a code in the form HK-XXXX-XXXX and rings your bell. Show the code at the venue, or scan it at the door kiosk, and the host hands over the reward and marks it fulfilled.
+    content: `Open your wallet's Collection and the Sets & rewards panel. Each set shows a progress bar; once a set's reward is announced and the set is complete, a Claim button appears. Claiming gives you a code in the form HK-XXXX-XXXX and rings your bell. Show the code at the venue, or scan it at the door kiosk, and the host hands over the reward and marks it fulfilled.
 
 Humankind may ask for identification before handing over a reward of value, may set a time limit on claims for a given event, and may void a claim obtained by fraud, duplicate accounts or a disputed ticket.`,
   },
