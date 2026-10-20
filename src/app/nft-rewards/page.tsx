@@ -23,7 +23,7 @@ Your ticket number decides your card. Nobody, not even Humankind, chooses who ge
 • Rarity. Most cards are standard. About one in ten is gold. One in fifty is foil, with a prismatic frame. Ticket number one is always foil.
 • The attendance seal. When your ticket is scanned at the door, your card is stamped ATTENDED with the date. The seal is part of the card itself and stays with it forever, whoever holds it next. A card from someone who was in the room is a different object from one that was not.
 • Wrapped. A card arrives wrapped: everyone, you included, sees only the deck's back until you unwrap it in your wallet. You can keep it wrapped and trade it as a mystery. Once unwrapped, it stays unwrapped.
-• No cost to you. No crypto to buy, no gas fees, no exchange. Your Humankind wallet is created with your account and the card is delivered into it.`,
+• No cost to you to get or hold a card. No crypto to buy, no exchange. Your Humankind wallet is created with your account, Humankind pays to mint and deliver the card, and seeds the wallet with a little HBAR. Sending a card to someone costs the Hedera network a few cents, taken from that seed.`,
   },
   {
     title: "How to Get Cards",
