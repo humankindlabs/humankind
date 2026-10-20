@@ -29,7 +29,7 @@ Your ticket number decides your card. Nobody, not even Humankind, chooses who ge
     title: "How to Get Cards",
     content: `• Buy a ticket on Humankind to an event with cards. The card lands in your wallet, wrapped, as soon as the ticket is yours.
 • Bought on Eventbrite? Your ticket still comes with a card. You will receive an email with a claim link; create a free Humankind account (or sign in) and the card is delivered to your wallet.
-• Trade with other members. Send a card to anyone from your wallet (Collection → the card → Send). Swaps and sales between members are arranged between you today; an offers board is coming.
+• Trade with other members from your wallet's Collection: offer a card (or several) to a named member or to anyone, say what you want in return, and the humankind trade desk hands both sides over at once. Sending a card to anyone is there too. Sales for money are coming with the marketplace.
 • Attend. Scanning in at the door earns the attendance seal, which some sets require.`,
   },
   {
@@ -46,7 +46,9 @@ The sets:
 • Deck — all 52 cards of one deck
 • Lotus — one attended card from every event in a year
 
-The rewards are coming soon. Each set's reward is announced here and in your wallet before it can be claimed; your progress toward every set counts from your first card. Gold and foil cards count like any other card in a set.`,
+The rewards are coming soon. Each set's reward is announced here and in your wallet before it can be claimed; your progress toward every set counts from your first card. Gold and foil cards count like any other card in a set.
+
+A card earns one reward, ever. Once a card has been used to claim a set's reward it is marked "Reward used" and counts toward no set again, whoever holds it next, unless a deck's own rules say otherwise. It keeps everything else: its picture, its seal, and its place in the collection, and it can still be traded or sold.`,
   },
   {
     title: "Claiming a Reward",
