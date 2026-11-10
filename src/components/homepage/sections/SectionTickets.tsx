@@ -20,42 +20,37 @@ function when(iso: string | null, long = false): string {
     : { month: "short", day: "numeric", year: "numeric", timeZone: "America/Phoenix" });
 }
 
-/** the ticket: the event's art over a tear line, "ADMIT ONE", the date, a barcode — drawn in CSS */
+/** the ticket, Angel's way: the event's whole flyer is the ticket (nothing cropped), a notch at the top, the
+ *  barcode and the date printed over its foot */
 function Ticket({ ev }: { ev: Event }) {
-  const notch = "radial-gradient(circle at 0 50%, transparent 11px, #f6f1e6 11.5px) left / 50% 100% no-repeat, radial-gradient(circle at 100% 50%, transparent 11px, #f6f1e6 11.5px) right / 50% 100% no-repeat";
+  const notch = "radial-gradient(circle at 50% 0, transparent 13px, #000 13.5px)";
   return (
-    <div className="hk-ticket" style={{ width: 230, borderRadius: 18, overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.55)", background: "#f6f1e6", color: "#111", display: "flex", flexDirection: "column" }}>
-      <div className="hk-ticket-art" style={{ position: "relative", height: 210, background: "#0b1020" }}>
-        {ev.image_url
-          // eslint-disable-next-line @next/next/no-img-element
-          ? <img src={ev.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-          : <div style={{ width: "100%", height: "100%", background: "linear-gradient(160deg, #0CB001, #063a10)" }} />}
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,0.75) 100%)" }} />
-        <div style={{ position: "absolute", left: 14, right: 14, bottom: 12, color: "#fff" }}>
-          <p style={{ fontSize: "0.625rem", letterSpacing: "0.18em", fontWeight: 800, opacity: 0.85 }}>EVENT TICKET</p>
-          <p style={{ fontSize: "0.9375rem", fontWeight: 800, lineHeight: 1.15, marginTop: 4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{ev.title}</p>
-        </div>
-      </div>
-      {/* the tear line with its notches */}
-      <div style={{ height: 24, background: notch, position: "relative" }}>
-        <div style={{ position: "absolute", left: 18, right: 18, top: 11, borderTop: "2px dashed rgba(0,0,0,0.25)" }} />
-      </div>
-      <div style={{ padding: "2px 16px 14px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8 }}>
+    <div className="hk-ticket" style={{ position: "relative", width: 230, height: 330, borderRadius: 16, overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.55)", background: "#0b1020", WebkitMaskImage: notch, maskImage: notch }}>
+      {ev.image_url ? (
+        <>
+          {/* a poster shape whatever the flyer's shape: the flyer whole, over a blurred, darkened copy of itself */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={ev.image_url} alt="" aria-hidden style={{ position: "absolute", inset: -20, width: "calc(100% + 40px)", height: "calc(100% + 40px)", objectFit: "cover", filter: "blur(16px) brightness(0.55) saturate(1.2)" }} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={ev.image_url} alt="" style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", objectFit: "contain", objectPosition: "center 40%" }} />
+        </>
+      ) : <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, #0CB001, #063a10)" }} />}
+      {/* the foot: a dark fade, the date and the barcode */}
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, padding: "34px 14px 12px", background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.72) 55%, rgba(0,0,0,0.9) 100%)", color: "#fff", display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8 }}>
         <div style={{ minWidth: 0 }}>
-          <p style={{ fontSize: "0.625rem", letterSpacing: "0.16em", fontWeight: 800, color: "#0a7a00" }}>ADMIT ONE</p>
-          <p style={{ fontSize: "0.8125rem", fontWeight: 700, marginTop: 2 }}>{when(ev.starts_at)}</p>
-          <p style={{ fontSize: "0.6875rem", color: "rgba(0,0,0,0.55)", marginTop: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{ev.venue_name || "at humankind · Sedona, AZ"}</p>
+          <p style={{ fontSize: "0.5625rem", letterSpacing: "0.18em", fontWeight: 800, color: "#7CFF6B" }}>ADMIT ONE</p>
+          <p style={{ fontSize: "0.8125rem", fontWeight: 700, marginTop: 2, whiteSpace: "nowrap" }}>{when(ev.starts_at)}</p>
         </div>
-        {/* a barcode */}
-        <div style={{ display: "flex", gap: 2, alignItems: "flex-end", height: 34, flexShrink: 0 }} aria-hidden>
-          {[3, 1, 2, 1, 3, 1, 1, 2, 3, 1, 2, 1, 1, 3, 2, 1].map((w, n) => (
-            <span key={n} style={{ width: w, height: "100%", background: "#111", opacity: 0.85 }} />
+        <div style={{ display: "flex", gap: 2, alignItems: "flex-end", height: 30, flexShrink: 0 }} aria-hidden>
+          {[3, 1, 2, 1, 3, 1, 1, 2, 3, 1, 2, 1, 1, 3, 2, 1, 2, 1].map((w, n) => (
+            <span key={n} style={{ width: w, height: "100%", background: "#fff", opacity: 0.92 }} />
           ))}
         </div>
       </div>
     </div>
   );
 }
+
 
 export function SectionTickets({ events }: { events: Event[] }) {
   // the events that come with a card, the next one first (the rotation's order: Heart Coherence, ELFORIA, Metamorphosis…)
@@ -145,8 +140,7 @@ export function SectionTickets({ events }: { events: Event[] }) {
           .hk-ticket-pair { min-height: 0 !important; }
         }
         @media (max-width: 480px) {
-          .hk-ticket { width: 168px !important; }
-          .hk-ticket-art { height: 150px !important; }
+          .hk-ticket { width: 160px !important; height: 230px !important; }
           .hk-ticket-card { width: 150px !important; }
         }
       `}</style>
