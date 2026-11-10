@@ -140,10 +140,10 @@ export function PromoBar({ events, feed = null }: { events: Event[]; feed?: Feed
       </button>
       <style>{`
         @media (max-width: 760px) {
-          .hk-promo-bar { grid-template-columns: 1fr !important; gap: 0.375rem !important; padding: 0.75rem 2.75rem 0.75rem 1rem !important; text-align: center; }
+          .hk-promo-bar { grid-template-columns: 1fr !important; gap: 0.25rem !important; padding: 0.625rem 2.75rem 0.625rem 1rem !important; text-align: center; }
           .hk-promo-label, .hk-promo-words, .hk-promo-cta { justify-self: center !important; }
           .hk-promo-words { font-size: 0.875rem; }
-          .hk-promo-cta { margin-top: 0.25rem; }
+          .hk-promo-cta { display: none !important; } /* on a phone the whole bar is the button (John 11/10) */
         }
         .hk-promo-bar:hover .hk-promo-cta { background: rgba(255,255,255,0.24); }
       `}</style>
