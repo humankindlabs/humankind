@@ -80,11 +80,14 @@ export function PromoBar({ events, feed = null }: { events: Event[]; feed?: Feed
         : <strong style={{ fontWeight: 700 }}>{s.message}</strong>)
     : <>{s.message}{s.strong ? <span style={{ color: "rgba(255,255,255,0.7)" }}> · {s.strong}</span> : null}</>;
 
+  // the whole bar is the link (John 11/9: "create the banner to be clickable not just the button"); the × sits
+  // beside it, outside the link, so closing never follows it
   return (
-    <div
+    <div style={{ position: "relative" }}>
+    <a
+      href={s.href}
       className="hk-promo-bar"
       style={{
-        position: "relative",
         display: "grid",
         gridTemplateColumns: "minmax(0, 1fr) auto minmax(0, 1fr)",
         alignItems: "center",
@@ -97,6 +100,8 @@ export function PromoBar({ events, feed = null }: { events: Event[]; feed?: Feed
         color: "#fff",
         fontSize: "0.9375rem",
         minHeight: "46px",
+        textDecoration: "none",
+        cursor: "pointer",
         opacity: fade ? 1 : 0,
         transition: "opacity 0.35s, background 0.35s",
       }}
@@ -109,18 +114,18 @@ export function PromoBar({ events, feed = null }: { events: Event[]; feed?: Feed
       <span className="hk-promo-words" style={{ justifySelf: "center", textAlign: "center", color: "rgba(255,255,255,0.95)", lineHeight: 1.35 }}>
         {words}
       </span>
-      {/* right: the button */}
-      <a
-        href={s.href}
+      {/* right: the button (a span: the bar around it is the link) */}
+      <span
         className="hk-promo-cta"
         style={{
           justifySelf: "end", display: "inline-flex", alignItems: "center", padding: "0.4375rem 1rem", borderRadius: "8px",
           background: "rgba(255,255,255,0.14)", border: "1px solid rgba(255,255,255,0.22)", color: "#fff",
-          fontSize: "0.8125rem", fontWeight: 600, textDecoration: "none", whiteSpace: "nowrap",
+          fontSize: "0.8125rem", fontWeight: 600, whiteSpace: "nowrap",
         }}
       >
         {s.cta}
-      </a>
+      </span>
+    </a>
       <button
         type="button"
         aria-label="Close"
@@ -140,6 +145,7 @@ export function PromoBar({ events, feed = null }: { events: Event[]; feed?: Feed
           .hk-promo-words { font-size: 0.875rem; }
           .hk-promo-cta { margin-top: 0.25rem; }
         }
+        .hk-promo-bar:hover .hk-promo-cta { background: rgba(255,255,255,0.24); }
       `}</style>
     </div>
   );
