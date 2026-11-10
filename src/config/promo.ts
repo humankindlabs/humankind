@@ -11,16 +11,18 @@
 const APP_URL = "https://app.humankind.center";
 
 export const PROMO_BAR = {
-  // OFF until John confirms the deal and the BLACKFRIDAY code exists under Admin → Promo codes; the events still take turns
-  active: false,
+  // ON (John 11/9: "$7/mo works"); the register link locks the yearly plan and carries the code
+  active: true,
   /** shown from … until (Phoenix dates, inclusive); outside the window only the events take turns */
   from: "2026-11-09",
   until: "2026-12-01",
   label: "Early Black Friday Sale",
-  message: "Online Access for as low as $7/mo, billed annually",
+  message: "Join Online Access for as low as $7/mo, billed annually",
+  /** the part of the message drawn in gold */
+  strong: "$7/mo",
   cta: "Join Online",
-  // the yearly plan with the sale's promo code applied at checkout (the code is made under Admin → Promo codes)
-  href: `${APP_URL}/register?tier=online&billing=year&promo=BLACKFRIDAY`,
+  // the yearly plan, the year only, with the sale's promo code applied at checkout (the code is made under Admin → Promo codes)
+  href: `${APP_URL}/register?tier=online&billing=year&only=year&promo=BLACKFRIDAY`,
   /** seconds each message stays before the next one slides in */
   everySeconds: 6,
   /** how many upcoming events join the rotation */
@@ -31,15 +33,15 @@ export const TICKETS = {
   eyebrow: "Tickets & collectable cards",
   title: "Get Your Tickets. Every Ticket Comes With a Card.",
   body:
-    "Every event ticket at humankind comes with a collectable card for your humankind wallet — one of a deck drawn for the night. " +
+    "Buy a ticket and a collectable card comes with it — one of a deck drawn for that night, minted to your humankind wallet. " +
     "Collect the suits, trade with other members and unlock rewards.",
-  /** the event the big button is for: first upcoming event whose title matches; else the next event */
-  featured: /elforia/i,
+  /** seconds each event stays before the next one with a card takes its turn */
+  everySeconds: 7,
   // a short name goes on the button ("Get ELFORIA tickets"); a long one would not fit
   featuredCta: (title: string) => (title.length <= 20 ? `Get ${title} tickets` : "Get tickets"),
   fallbackCta: "See upcoming events",
   fallbackHref: `${APP_URL}/events`,
   secondary: { label: "How the cards work", href: "/nft-rewards" },
-  /** the cards fanned beside the words (public/images/tickets) */
+  /** the cards shown when no event with a card is on sale yet (public/images/tickets) */
   cards: ["/images/tickets/elforia-santa.webp", "/images/tickets/elforia-snowblob.webp", "/images/tickets/elforia-frostelf.webp"],
 };

@@ -40,6 +40,9 @@ type EventRow = {
   image_url: string | null;
   venue_name: string | null;
   price_label: string | null;
+  /** the ticket comes with a collectable card, and a picture of one of the deck's cards */
+  nft?: boolean;
+  card_image?: string | null;
 };
 
 type Broadcast = {
@@ -58,7 +61,7 @@ const EMPTY_BROADCAST: Broadcast = {
   nowPlaying: "Humankind Broadcast",
 };
 
-async function getHomepageData(): Promise<{ events: EventRow[]; broadcast: Broadcast }> {
+async function getHomepageData(): Promise<{ events: EventRow[]; cardEvents: EventRow[]; broadcast: Broadcast }> {
   try {
     const res = await fetch(`${APP_URL}/api/public/homepage-data`, {
       // Revalidate every 60 seconds — fresh enough for events + live broadcast
@@ -68,18 +71,20 @@ async function getHomepageData(): Promise<{ events: EventRow[]; broadcast: Broad
     const data = await res.json();
     return {
       events: Array.isArray(data.events) ? data.events : [],
+      // the events whose ticket comes with a card (the tickets section takes turns between them)
+      cardEvents: Array.isArray(data.cardEvents) ? data.cardEvents : [],
       broadcast: data.broadcast ?? EMPTY_BROADCAST,
     };
   } catch (err) {
     console.warn("[homepage] failed to load app data:", err);
-    return { events: [], broadcast: EMPTY_BROADCAST };
+    return { events: [], cardEvents: [], broadcast: EMPTY_BROADCAST };
   }
 }
 
 const HEROES = { A: HeroA, B: HeroB, C: HeroC, D: HeroD };
 
 export default async function HomePage() {
-  const { events, broadcast } = await getHomepageData();
+  const { events, cardEvents, broadcast } = await getHomepageData();
   const Hero = HEROES[ab.hero] ?? HeroA;
 
   function renderSection(key: string) {
@@ -92,7 +97,7 @@ export default async function HomePage() {
       case "marqueeStrip":  return <SectionMarqueeStrip key={key} />;
       case "testimonials":  return <SectionTestimonials key={key} />;
       case "faq":           return <SectionFAQ key={key} />;
-      case "tickets":       return <SectionTickets key={key} events={events} />;
+      case "tickets":       return <SectionTickets key={key} events={cardEvents} />;
       case "events":        return <SectionEvents key={key} events={events.slice(0, 3)} />;
       case "liveCTA":       return <SectionLiveCTA key={key} broadcast={broadcast} />;
       case "pricing":       return <SectionPricing key={key} />;
