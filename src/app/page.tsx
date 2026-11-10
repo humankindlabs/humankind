@@ -8,6 +8,7 @@ import { pageMeta } from "@/config/metadata";
 export const metadata = pageMeta.home;
 
 import { MarketingNav } from "@/components/marketing/marketing-nav";
+import { PromoBar } from "@/components/marketing/promo-bar";
 import { HomepageFooter } from "@/components/homepage/HomepageFooter";
 import { ab } from "@/config/ab";
 
@@ -25,6 +26,7 @@ import { SectionMarqueeStrip } from "@/components/homepage/sections/SectionMarqu
 import { SectionTestimonials } from "@/components/homepage/sections/SectionTestimonials";
 import { SectionFAQ }          from "@/components/homepage/sections/SectionFAQ";
 import { SectionEvents }       from "@/components/homepage/sections/SectionEvents";
+import { SectionTickets }      from "@/components/homepage/sections/SectionTickets";
 import { SectionLiveCTA }      from "@/components/homepage/sections/SectionLiveCTA";
 import { SectionPricing }      from "@/components/homepage/sections/SectionPricing";
 import { SectionCommunityCTA } from "@/components/homepage/sections/SectionCommunityCTA";
@@ -90,7 +92,8 @@ export default async function HomePage() {
       case "marqueeStrip":  return <SectionMarqueeStrip key={key} />;
       case "testimonials":  return <SectionTestimonials key={key} />;
       case "faq":           return <SectionFAQ key={key} />;
-      case "events":        return <SectionEvents key={key} events={events} />;
+      case "tickets":       return <SectionTickets key={key} events={events} />;
+      case "events":        return <SectionEvents key={key} events={events.slice(0, 3)} />;
       case "liveCTA":       return <SectionLiveCTA key={key} broadcast={broadcast} />;
       case "pricing":       return <SectionPricing key={key} />;
       case "communityCTA":  return <SectionCommunityCTA key={key} />;
@@ -108,6 +111,8 @@ export default async function HomePage() {
         overflowX: "hidden",
       }}
     >
+      {/* the sale and the next events take turns up top (John 11/9, after angel.com) */}
+      <PromoBar events={events} />
       <MarketingNav />
 
       <div id="homepage-content">

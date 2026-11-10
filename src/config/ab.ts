@@ -18,6 +18,7 @@ export const ab = {
   // Options: stats | featureCards | featureSplit | feature2x2
   //          imageGrid | marqueeStrip | testimonials | faq | communityCTA
   sections: [
+    "tickets",       // ← always live: tickets + the collectable cards, the featured event's button (John 11/9)
     "events",        // ← always live
     "liveCTA",       // ← always live
     "pricing",       // ← always live
@@ -33,6 +34,7 @@ export type SectionKey =
   | "featureSplit"
   | "feature2x2"
   | "imageGrid"
+  | "tickets"
   | "events"
   | "liveCTA"
   | "marqueeStrip"
