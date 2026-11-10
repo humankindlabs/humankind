@@ -9,6 +9,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { PROMO_BAR } from "@/config/promo";
+import { useHumankindUser } from "@/hooks/use-humankind-user";
 
 type Event = { id: string; title: string; starts_at: string | null };
 type Slide = { label: string; message: string; strong?: string; cta: string; href: string; sale: boolean };
@@ -34,14 +35,21 @@ function when(iso: string | null): string {
   return new Date(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "America/Phoenix" });
 }
 
-export function PromoBar({ events }: { events: Event[] }) {
+type Feed = { slides: Slide[]; everySeconds: number } | null;
+
+/** `feed`: the slides as the app publishes them (its lib/promo-bar.ts is the one place for the words); without a feed
+ *  the bar builds them from config/promo.ts */
+export function PromoBar({ events, feed = null }: { events: Event[]; feed?: Feed }) {
   const closed = useSyncExternalStore(closedStore.subscribe, closedStore.get, closedStore.server);
+  // the sale is for visitors and free members only (John 11/9): a paying member sees the events
+  const { user } = useHumankindUser();
+  const paying = user?.tier === "online" || user?.tier === "full";
   const [i, setI] = useState(0);
   const [fade, setFade] = useState(true);
 
   const today = phoenixToday();
   const sale = PROMO_BAR.active && today >= PROMO_BAR.from && today <= PROMO_BAR.until;
-  const slides: Slide[] = [
+  const slides: Slide[] = (feed ? feed.slides : [
     ...(sale ? [{ label: PROMO_BAR.label, message: PROMO_BAR.message, strong: PROMO_BAR.strong, cta: PROMO_BAR.cta, href: PROMO_BAR.href, sale: true }] : []),
     ...events.slice(0, PROMO_BAR.events).map((e) => ({
       label: "Upcoming",
@@ -51,16 +59,16 @@ export function PromoBar({ events }: { events: Event[] }) {
       href: `https://app.humankind.center/events/${e.id}`,
       sale: false,
     })),
-  ];
+  ]).filter((x) => !(paying && x.sale));
 
   useEffect(() => {
     if (slides.length < 2) return;
     const t = setInterval(() => {
       setFade(false);
       setTimeout(() => { setI((n) => (n + 1) % slides.length); setFade(true); }, 350);
-    }, PROMO_BAR.everySeconds * 1000);
+    }, (feed?.everySeconds ?? PROMO_BAR.everySeconds) * 1000);
     return () => clearInterval(t);
-  }, [slides.length]);
+  }, [slides.length, feed?.everySeconds]);
 
   if (closed || slides.length === 0) return null;
   const s = slides[i % slides.length];

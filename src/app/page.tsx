@@ -61,7 +61,9 @@ const EMPTY_BROADCAST: Broadcast = {
   nowPlaying: "Humankind Broadcast",
 };
 
-async function getHomepageData(): Promise<{ events: EventRow[]; cardEvents: EventRow[]; broadcast: Broadcast }> {
+type PromoFeed = { slides: Array<{ label: string; message: string; strong?: string; cta: string; href: string; sale: boolean }>; everySeconds: number };
+
+async function getHomepageData(): Promise<{ events: EventRow[]; cardEvents: EventRow[]; broadcast: Broadcast; promo: PromoFeed | null }> {
   try {
     const res = await fetch(`${APP_URL}/api/public/homepage-data`, {
       // Revalidate every 60 seconds — fresh enough for events + live broadcast
@@ -74,17 +76,19 @@ async function getHomepageData(): Promise<{ events: EventRow[]; cardEvents: Even
       // the events whose ticket comes with a card (the tickets section takes turns between them)
       cardEvents: Array.isArray(data.cardEvents) ? data.cardEvents : [],
       broadcast: data.broadcast ?? EMPTY_BROADCAST,
+      // the promo bar's words come from the app (lib/promo-bar.ts there is the one place); null = fall back to config/promo.ts
+      promo: data.promo && Array.isArray(data.promo.slides) ? data.promo : null,
     };
   } catch (err) {
     console.warn("[homepage] failed to load app data:", err);
-    return { events: [], cardEvents: [], broadcast: EMPTY_BROADCAST };
+    return { events: [], cardEvents: [], broadcast: EMPTY_BROADCAST, promo: null };
   }
 }
 
 const HEROES = { A: HeroA, B: HeroB, C: HeroC, D: HeroD };
 
 export default async function HomePage() {
-  const { events, cardEvents, broadcast } = await getHomepageData();
+  const { events, cardEvents, broadcast, promo } = await getHomepageData();
   const Hero = HEROES[ab.hero] ?? HeroA;
 
   function renderSection(key: string) {
@@ -117,7 +121,7 @@ export default async function HomePage() {
       }}
     >
       {/* the sale and the next events take turns up top (John 11/9, after angel.com) */}
-      <PromoBar events={events} />
+      <PromoBar events={events} feed={promo} />
       <MarketingNav />
 
       <div id="homepage-content">
