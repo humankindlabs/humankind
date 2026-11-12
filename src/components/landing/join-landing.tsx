@@ -43,8 +43,19 @@ function EmailStart({ sale, where }: { sale: Sale; where: string }) {
   return (
     <form className="hk-join-form" onSubmit={go}>
       <input type="email" inputMode="email" autoComplete="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="Email address" />
-      <button type="submit">Get started</button>
+      <button type="submit">Join Online Access</button>
     </form>
+  );
+}
+
+/** the line under every box: what the email signs you up for (John 11/12) */
+function Commit({ sale }: { sale: Sale }) {
+  return (
+    <p className="hk-join-commit">
+      {sale.open
+        ? <>You&apos;re signing up for <b>Online Access</b>, ${sale.yearAfter} for the first year (that&apos;s ${sale.perMonth}/mo). Cancel any time.</>
+        : <>You&apos;re signing up for <b>Online Access</b>, ${sale.monthPrice} a month. Cancel any time.</>}
+    </p>
   );
 }
 
@@ -99,7 +110,16 @@ export function JoinLanding({ replays, shows, conferences, events, counts, sale 
         .hk-join-form input { flex:1; min-width:0; padding: 1rem 1.15rem; border-radius: 12px; border:1px solid rgba(255,255,255,0.22); background: rgba(0,0,0,0.5); color:#fff; font-size:1rem; }
         .hk-join-form input::placeholder { color: rgba(255,255,255,0.45); }
         .hk-join-form button { padding: 1rem 1.6rem; border-radius: 12px; border:0; background:${GREEN}; color:#fff; font-weight:800; font-size:1rem; cursor:pointer; white-space:nowrap; box-shadow: 0 0 36px rgba(12,176,1,0.35); }
-        .hk-join-sub { margin: 0.9rem 0 0; font-size:0.8rem; color: rgba(255,255,255,0.45); }
+        .hk-join-commit { margin: 0.8rem auto 0; max-width: 520px; font-size:0.85rem; color: rgba(255,255,255,0.6); line-height:1.5; }
+        .hk-join-commit b { color:#fff; font-weight:700; }
+        .hk-join-sub { margin: 0.6rem 0 0; font-size:0.8rem; color: rgba(255,255,255,0.45); }
+        .hk-join-ways { display:grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; max-width: 760px; margin: 1.6rem auto 0; }
+        .hk-join-way { padding: 1.4rem 1.4rem; border-radius: 18px; border:1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.025); display:flex; flex-direction:column; }
+        .hk-join-way h4 { margin:0; font-size:1rem; font-weight:700; color: rgba(255,255,255,0.85); }
+        .hk-join-way .p { margin: 0.35rem 0 0; font-size:1.6rem; font-weight:800; letter-spacing:-0.03em; }
+        .hk-join-way .p small { font-size:0.9rem; font-weight:600; color: rgba(255,255,255,0.5); letter-spacing:0; }
+        .hk-join-way p.l { margin: 0.6rem 0 0; font-size:0.9rem; color: rgba(255,255,255,0.6); line-height:1.55; flex:1; }
+        .hk-join-way a { display:inline-block; margin-top: 1rem; font-size:0.9rem; font-weight:700; color:${GREEN}; text-decoration:none; }
         .hk-join-sub a { color: rgba(255,255,255,0.7); }
         .hk-join-proof { display:flex; gap:2.2rem; justify-content:center; margin: 2rem 0 0; flex-wrap:wrap; }
         .hk-join-proof strong { display:block; font-size:1.5rem; font-weight:800; letter-spacing:-0.02em; }
@@ -136,6 +156,7 @@ export function JoinLanding({ replays, shows, conferences, events, counts, sale 
           .hk-join-row img { width: 160px; border-radius:10px; }
           .hk-join-hero { padding-bottom: 3rem; }
           .hk-join-offer { padding: 2rem 1.25rem; }
+          .hk-join-ways { grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -164,7 +185,8 @@ export function JoinLanding({ replays, shows, conferences, events, counts, sale 
               : <>Online Access is <b>${sale.monthPrice} a month</b>. Every live stream, the full library, your TV.</>}
           </p>
           <EmailStart sale={sale} where="hero" />
-          <p className="hk-join-sub">Cancel any time. Already a member? <a href={`${APP}/login`}>Sign in</a></p>
+          <Commit sale={sale} />
+          <p className="hk-join-sub">Already a member? <a href={`${APP}/login`}>Sign in</a></p>
           {counts.members > 0 ? (
             <div className="hk-join-proof">
               <div><strong>{n(counts.members)}</strong><span>members</span></div>
@@ -212,10 +234,23 @@ export function JoinLanding({ replays, shows, conferences, events, counts, sale 
               <li>Your wallet, your own link, and a share of what you bring in</li>
             </ul>
             <EmailStart sale={sale} where="offer" />
-            <p className="hk-join-other">
-              {sale.open ? <><a href={`${APP}/register?tier=online`}>$11 a month instead</a> · </> : null}
-              <a href={`${APP}/register?tier=free`}>Start free</a> · <a href={`${APP}/register?tier=full`}>Full Membership, $77/mo</a>
-            </p>
+            <Commit sale={sale} />
+            {sale.open ? <p className="hk-join-other"><a href={`${APP}/register?tier=online`}>Or $11 a month, billed monthly</a></p> : null}
+          </div>
+
+          <div className="hk-join-ways">
+            <div className="hk-join-way">
+              <h4>Free Member</h4>
+              <p className="p">$0</p>
+              <p className="l">The free replays and public live streams, your profile and messages, your wallet, and your own link that earns 20% on members you bring.</p>
+              <a href={`${APP}/register?tier=free`} onClick={(e) => { e.preventDefault(); void trackEvent("landing.plan", "marketing", { landing_page: "join", tier: "free" }, "humankind.center"); window.location.href = withUtm(`${APP}/register`, { tier: "free" }); }}>Start free →</a>
+            </div>
+            <div className="hk-join-way">
+              <h4>Full Membership</h4>
+              <p className="p">$77<small>/mo</small></p>
+              <p className="l">Everything online, plus in-person access to events at the Sedona venue, a vote in community decisions, 7% off stays, and 50% on members you bring, for life.</p>
+              <a href={`${APP}/register?tier=full`} onClick={(e) => { e.preventDefault(); void trackEvent("landing.plan", "marketing", { landing_page: "join", tier: "full" }, "humankind.center"); window.location.href = withUtm(`${APP}/register`, { tier: "full" }); }}>Choose Full Membership →</a>
+            </div>
           </div>
         </div>
       </section>
@@ -260,7 +295,7 @@ export function JoinLanding({ replays, shows, conferences, events, counts, sale 
       <section className="hk-join-cta">
         <h2 className="hk-join-h2">Join the movement.</h2>
         <p className="hk-join-p">{sale.open ? `${sale.label} ends ${new Date(sale.until + "T12:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric" })}.` : "It takes a minute."}</p>
-        <div style={{ maxWidth: 520, margin: "0 auto" }}><EmailStart sale={sale} where="bottom" /></div>
+        <div style={{ maxWidth: 520, margin: "0 auto" }}><EmailStart sale={sale} where="bottom" /><Commit sale={sale} /></div>
       </section>
 
       <HomepageFooter />
