@@ -4,6 +4,7 @@ import Link from "next/link";
 const NAV_LINKS = [
   { label: "Our Vision",            href: "/our-vision" },
   { label: "What Is Humankind?",    href: "/what-is-humankind" },
+  { label: "How it works",          href: "/how-it-works" },
   { label: "Blog",                  href: "/blog" },
   { label: "Meditation Downloads",  href: "/meditation-downloads" },
   { label: "Connect",               href: "/connect" },

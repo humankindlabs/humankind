@@ -17,6 +17,7 @@ const APP_URL = "https://app.humankind.center";
 const NAV_LINKS = [
   { label: "Our Vision",         href: "/our-vision" },
   { label: "What is humankind",  href: "/what-is-humankind" },
+  { label: "How it works",       href: "/how-it-works" },
   { label: "Connect",            href: "/connect" },
   { label: "Book the Venue",     href: "https://venue.humankind.center/", external: true },
 ] as const;
