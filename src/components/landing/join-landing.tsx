@@ -261,7 +261,7 @@ export function JoinLanding({ replays, shows, conferences, events, counts, sale 
           <div className="hk-join-wrap">
             <h2 className="hk-join-h2">The conferences.</h2>
             <p className="hk-join-p">Every talk, recorded and in the library the same week.</p>
-            <Grid items={conferences} cols={3} max={6} />
+            <Grid items={conferences} cols={3} max={12} />
           </div>
         </section>
       ) : null}
