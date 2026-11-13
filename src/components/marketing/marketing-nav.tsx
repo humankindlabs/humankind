@@ -207,6 +207,7 @@ function UserWidget({ user }: { user: HumankindUser }) {
     { href: paid && u ? `${APP_URL}/human/${u}/events` : `${APP_URL}/events`, label: "Upcoming Events", icon: "cal" },
     { href: "https://stay.humankind.center/", label: "Stay Listings", icon: "home" },
     ...(u ? [{ href: `${APP_URL}/human/${u}`, label: "Account", icon: "user" }] : []),
+    ...(u ? [{ href: `${APP_URL}/people`, label: "People", icon: "people" }] : []),
     ...(paid && u ? [{ href: `${APP_URL}/human/${u}/tickets`, label: "Tickets", icon: "ticket" }] : []),
     ...(u ? [{ href: `${APP_URL}/human/${u}/gov`, label: "Governance", icon: "vote" }] : []),
     ...(u ? [{ href: `${APP_URL}/human/${u}/settings/billing`, label: "Billing", icon: "card" }] : []),
@@ -372,6 +373,7 @@ function MenuItemIcon({ name }: { name: string }) {
       {name === "user" && (
         <svg {...props}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
       )}
+      {name === "people" && (<svg {...props}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>)}
       {name === "qr" && (
         <svg {...props}><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><line x1="14" y1="14" x2="21" y2="14" /><line x1="14" y1="18" x2="18" y2="18" /><line x1="14" y1="21" x2="21" y2="21" /></svg>
       )}
