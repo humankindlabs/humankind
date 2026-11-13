@@ -77,9 +77,19 @@ export function JoinLanding({ replays, shows, conferences, events, counts, sale 
   }, [sale.open]);
 
   // the wall: shows, conferences and events take turns, so every row has all three kinds
+  // one picture per show (a show's poster and its replays share a picture; John 11/13: Reality Shift sat twice side by side)
   const mix: Poster[] = [];
+  const seen = new Set<string>();
+  const keyOf = (p: Poster) => [p.still, p.title.replace(/\s*[|:].*$/, "").trim().toLowerCase()];
   const pools = [shows, conferences, events, replays];
-  for (let i = 0; mix.length < 30 && i < 30; i++) for (const pool of pools) { const p = pool[i]; if (p && !mix.some((m) => m.id === p.id)) mix.push(p); }
+  for (let i = 0; mix.length < 30 && i < 30; i++) for (const pool of pools) {
+    const p = pool[i];
+    if (!p) continue;
+    const keys = keyOf(p);
+    if (keys.some((k) => seen.has(k))) continue;
+    keys.forEach((k) => seen.add(k));
+    mix.push(p);
+  }
   const rows = [mix.slice(0, 10), mix.slice(10, 20), mix.slice(20, 30)].filter((r) => r.length >= 4);
   const n = (x: number) => x.toLocaleString("en-US");
   const money = (x: number) => (Number.isInteger(x) ? `$${x}` : `$${x.toFixed(2)}`);
