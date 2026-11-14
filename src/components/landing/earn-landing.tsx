@@ -1,5 +1,5 @@
 "use client";
-// src/components/landing/earn-landing.tsx — the affiliate page for influencers (see app/earn/page.tsx).
+// src/components/landing/earn-landing.tsx — the affiliate page for influencers (see app/hi/earn/page.tsx).
 // John 11/12: "market to influencers — tell them how simple it is to get set up — show the 3 levels Free, Online,
 // Full — get them excited and to pick the level they want to start earning from". Same look as /join: airy,
 // pictures, few words. The numbers are the program's (app lib/affiliate-attribution.ts: Free 20% for 6 paid

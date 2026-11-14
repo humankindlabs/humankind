@@ -40,6 +40,10 @@ async redirects() {
         destination: "https://app.humankind.center/register",
         permanent: true,
       },
+      // The ad pages moved under /hi with the other marketing pages (John 11/14). The ads and every shared link
+      // keep working: the query (aff, utm_*) rides through the redirect untouched.
+      { source: "/join", destination: "/hi/join", permanent: true },
+      { source: "/earn", destination: "/hi/earn", permanent: true },
       // Auth lives on the app subdomain — bounce these off the marketing root.
       {
         source: "/register",

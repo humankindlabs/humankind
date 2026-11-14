@@ -31,13 +31,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/join`,
+      url: `${BASE_URL}/hi/join`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/earn`,
+      url: `${BASE_URL}/hi/earn`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,

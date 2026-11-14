@@ -164,7 +164,7 @@ export function HomepageFooter() {
         <div style={{ display: "flex", gap: "1.5rem" }}>
           <Link href="/privacy" style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.25)", textDecoration: "none" }}>Privacy Policy</Link>
           <Link href="/terms" style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.25)", textDecoration: "none" }}>Terms & Conditions</Link>
-          <Link href="/earn" style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.25)", textDecoration: "none" }}>Affiliate Program</Link>
+          <Link href="/hi/earn" style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.25)", textDecoration: "none" }}>Affiliate Program</Link>
           <Link href="/nft-rewards" style={{ fontSize: "0.8125rem", color: "rgba(255,255,255,0.25)", textDecoration: "none" }}>NFT Rewards</Link>
         </div>
       </div>

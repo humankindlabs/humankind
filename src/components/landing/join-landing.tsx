@@ -1,5 +1,5 @@
 "use client";
-// src/components/landing/join-landing.tsx — the /join ad landing page (see app/join/page.tsx).
+// src/components/landing/join-landing.tsx — the /hi/join ad landing page (see app/hi/join/page.tsx).
 // John 11/12: airy, clean graphics (thumbnails from shows), not wordy; the wall is past shows, conferences and
 // live streams; the page sells Online Access ($11 a month, or the Black Friday year); the email box commits
 // the visitor to Online Access.

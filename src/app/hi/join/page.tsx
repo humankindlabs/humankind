@@ -1,4 +1,4 @@
-// src/app/join/page.tsx
+// src/app/hi/join/page.tsx  (moved from /join 11/14: John keeps every marketing page under /hi; /join redirects here)
 //
 // The ad landing page (John 11/12, after angel.com: "a landing page for humankind like this page for our ads …
 // a movement of a new lifestyle raising consciousness | mind - body - soul"; "airy, clean graphics (thumbnails
@@ -15,11 +15,11 @@ const APP = "https://app.humankind.center";
 export const metadata: Metadata = {
   title: "humankind — a new lifestyle, raising consciousness | mind · body · soul",
   description: "Live shows every week, conferences, a community and a place in Sedona. Online Access from $7 a month.",
-  alternates: { canonical: "https://humankind.center/join" },
+  alternates: { canonical: "https://humankind.center/hi/join" },
   openGraph: {
     title: "humankind — a new lifestyle, raising consciousness",
     description: "Live shows every week, conferences, a community and a place in Sedona.",
-    url: "https://humankind.center/join",
+    url: "https://humankind.center/hi/join",
     siteName: "humankind",
     images: [{ url: "/og-image.jpg" }],
   },
