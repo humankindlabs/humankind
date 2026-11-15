@@ -1,0 +1,16 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "center.humankind.app",
+      "sha256_cert_fingerprints": [
+        "BB:13:6B:DF:95:7C:07:3A:8B:18:CC:EB:92:D5:71:CF:E8:26:64:18:0A:BC:6C:D5:65:3D:06:B4:C3:39:9E:89",
+        "82:FD:B4:52:31:EA:8B:30:D0:6D:AC:CE:A3:7A:23:92:2C:BC:E3:3D:80:37:17:37:C7:93:FD:1C:BD:FA:82:DE",
+        "E6:78:54:AE:8C:E3:0C:13:32:B4:10:C2:E0:53:BA:1B:ED:DE:43:1A:B2:E2:48:53:FD:54:15:3A:4F:D6:90:05"
+      ]
+    }
+  }
+]
