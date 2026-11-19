@@ -91,6 +91,10 @@ export default function AffiliateProgramPage() {
           <p style={{ fontSize: "0.9375rem", marginTop: "1.25rem" }}>
             <Link href="https://app.humankind.center/ac/affiliate-program" style={{ color: "#0CB001", textDecoration: "none", fontWeight: 700 }}>Activate your affiliate account →</Link>
           </p>
+          <p style={{ fontSize: "0.9375rem", color: "rgba(255,255,255,0.5)", marginTop: "0.75rem" }}>
+            The program at a glance, with the three levels and a calculator of what referrals pay:{" "}
+            <Link href="/hi/earn" style={{ color: "#0CB001", textDecoration: "none" }}>humankind.center/hi/earn</Link>
+          </p>
         </div>
 
         {/* Sections */}
@@ -118,6 +122,8 @@ export default function AffiliateProgramPage() {
             <Link href="/privacy" style={{ color: "#0CB001", textDecoration: "none" }}>Privacy Policy</Link>
             {" · "}
             <Link href="https://app.humankind.center/ac/affiliate-program" style={{ color: "#0CB001", textDecoration: "none" }}>Your affiliate dashboard</Link>
+            {" · "}
+            <Link href="/hi/earn" style={{ color: "#0CB001", textDecoration: "none" }}>The program at a glance</Link>
           </p>
         </div>
       </main>
