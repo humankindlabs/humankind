@@ -1,4 +1,3 @@
-// Generated from the shared Supabase project (see humankind-app: npx supabase gen types typescript --linked). Regenerated 2026-11-25; copy of humankind-app/src/lib/database.types.ts.
 export type Json =
   | string
   | number
@@ -80,6 +79,212 @@ export type Database = {
           status?: string
         }
         Relationships: []
+      }
+      ad_accounts: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          name: string
+          owner_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind?: string
+          name: string
+          owner_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          name?: string
+          owner_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ad_campaigns: {
+        Row: {
+          account_id: string
+          created_at: string
+          created_by: string | null
+          daily_cap: number | null
+          ends_at: string | null
+          event_id: string | null
+          id: string
+          name: string
+          objective: string
+          starts_at: string | null
+          status: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          account_id: string
+          created_at?: string
+          created_by?: string | null
+          daily_cap?: number | null
+          ends_at?: string | null
+          event_id?: string | null
+          id?: string
+          name: string
+          objective?: string
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          account_id?: string
+          created_at?: string
+          created_by?: string | null
+          daily_cap?: number | null
+          ends_at?: string | null
+          event_id?: string | null
+          id?: string
+          name?: string
+          objective?: string
+          starts_at?: string | null
+          status?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_campaigns_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "ad_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ad_campaigns_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_creatives: {
+        Row: {
+          aspect: string
+          campaign_id: string
+          created_at: string
+          dayparts: string[] | null
+          duration: number
+          id: string
+          link_label: string | null
+          link_url: string | null
+          name: string
+          placement: string
+          status: string
+          thumbnail: string | null
+          title: string | null
+          updated_at: string
+          video_id: string
+        }
+        Insert: {
+          aspect?: string
+          campaign_id: string
+          created_at?: string
+          dayparts?: string[] | null
+          duration: number
+          id?: string
+          link_label?: string | null
+          link_url?: string | null
+          name: string
+          placement?: string
+          status?: string
+          thumbnail?: string | null
+          title?: string | null
+          updated_at?: string
+          video_id: string
+        }
+        Update: {
+          aspect?: string
+          campaign_id?: string
+          created_at?: string
+          dayparts?: string[] | null
+          duration?: number
+          id?: string
+          link_label?: string | null
+          link_url?: string | null
+          name?: string
+          placement?: string
+          status?: string
+          thumbnail?: string | null
+          title?: string | null
+          updated_at?: string
+          video_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_creatives_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_plays: {
+        Row: {
+          ad_id: string
+          campaign_id: string
+          day: string
+          device: string | null
+          id: number
+          played_at: string
+          surface: string
+          tapped: boolean
+          viewer_id: string | null
+        }
+        Insert: {
+          ad_id: string
+          campaign_id: string
+          day?: string
+          device?: string | null
+          id?: never
+          played_at?: string
+          surface: string
+          tapped?: boolean
+          viewer_id?: string | null
+        }
+        Update: {
+          ad_id?: string
+          campaign_id?: string
+          day?: string
+          device?: string | null
+          id?: never
+          played_at?: string
+          surface?: string
+          tapped?: boolean
+          viewer_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_plays_ad_id_fkey"
+            columns: ["ad_id"]
+            isOneToOne: false
+            referencedRelation: "ad_creatives"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ad_plays_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       affiliate_balances: {
         Row: {
@@ -838,6 +1043,8 @@ export type Database = {
       }
       broadcast_channels: {
         Row: {
+          ad_break_seconds: number
+          ads_enabled: boolean
           broadcast_day_start: string
           channel_type: string
           created_at: string
@@ -852,6 +1059,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          ad_break_seconds?: number
+          ads_enabled?: boolean
           broadcast_day_start?: string
           channel_type?: string
           created_at?: string
@@ -866,6 +1075,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          ad_break_seconds?: number
+          ads_enabled?: boolean
           broadcast_day_start?: string
           channel_type?: string
           created_at?: string
@@ -10455,6 +10666,7 @@ export type Database = {
           views: number
         }[]
       }
+      prune_old_rows: { Args: never; Returns: Json }
       recs_health: { Args: { p_days?: number }; Returns: Json }
       recs_prune: {
         Args: {
